@@ -259,7 +259,19 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
       <label class="check-item"><input type="checkbox"> 나라 이름 보임</label>
       <label class="check-item"><input type="checkbox"> 클릭 기능 체험</label>
     </div>
-    <div class="capture-box"><div class="ct">📷 그래프 캡처 후 여기에 붙여넣기</div><div class="cs">한국 점이 보이도록 캡처하세요</div></div>
+    <div class="share-box">
+      <div class="share-title">🔗 CODAP 그래프 링크 제출 — 그래프 2</div>
+      <div class="share-steps">
+        <div class="share-step"><span class="sn">1</span><span>CODAP 상단 메뉴 <span class="key">File</span> 클릭</span></div>
+        <div class="share-step"><span class="sn">2</span><span><span class="key">Share Document...</span> 클릭 → <span class="key">Copy Link</span> 클릭</span></div>
+        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 로 붙여넣기</span></div>
+      </div>
+      <div class="link-input-wrap">
+        <input id="link2" class="link-input" type="text" placeholder="https://codap.concord.org/..." oninput="checkLink('link2','status2')">
+        <button class="link-check-btn" onclick="window.open(document.getElementById('link2').value,'_blank')">🔍 확인</button>
+      </div>
+      <div class="link-status" id="status2"></div>
+    </div>
     <div class="read-box">
       <div class="read-q">점들이 어느 방향으로 모여 있나요?</div>
       <div style="display:flex;gap:12px;margin:4px 0 10px;flex-wrap:wrap;">
@@ -286,7 +298,19 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
       <li class="op-item"><span class="op-n n3">따라하기 2</span><span class="op-t"><strong>노년비율(%)</strong>을 y축으로 드래그</span></li>
     </ul>
     <div class="check-row"><label class="check-item"><input type="checkbox"> 노년비율 막대그래프 완성</label></div>
-    <div class="capture-box"><div class="ct">📷 그래프 캡처 후 여기에 붙여넣기</div><div class="cs">가장 높은 막대와 낮은 막대가 보이도록</div></div>
+    <div class="share-box">
+      <div class="share-title">🔗 CODAP 그래프 링크 제출 — 그래프 3</div>
+      <div class="share-steps">
+        <div class="share-step"><span class="sn">1</span><span>CODAP 상단 메뉴 <span class="key">File</span> 클릭</span></div>
+        <div class="share-step"><span class="sn">2</span><span><span class="key">Share Document...</span> 클릭 → <span class="key">Copy Link</span> 클릭</span></div>
+        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 로 붙여넣기</span></div>
+      </div>
+      <div class="link-input-wrap">
+        <input id="link3" class="link-input" type="text" placeholder="https://codap.concord.org/..." oninput="checkLink('link3','status3')">
+        <button class="link-check-btn" onclick="window.open(document.getElementById('link3').value,'_blank')">🔍 확인</button>
+      </div>
+      <div class="link-status" id="status3"></div>
+    </div>
     <div class="read-box">
       <div class="read-q">노년 비율이 가장 높은 나라는 어디인가요? 몇 %인가요?</div>
       <input id="g3_q1" class="ans-input" type="text" placeholder="나라:        / 노년 비율:     %">
