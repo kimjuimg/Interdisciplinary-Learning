@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>교사용 대시보드</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Malgun Gothic',Arial,sans-serif;background:#0f172a;color:#e2e8f0;font-size:13px;}
+.top-bar{background:#1e293b;border-bottom:1px solid #334155;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:10;}
+.top-title{font-size:16px;font-weight:700;color:#f1f5f9;}
+.top-sub{font-size:11px;color:#64748b;margin-top:2px;}
+.top-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.dot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.auto-label{font-size:11px;color:#64748b;}
+.tbtn{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:inherit;}
+.tbtn.blue{background:#2563eb;color:#fff;}
+.tbtn.green{background:#16a34a;color:#fff;}
+.tbtn.amber{background:#d97706;color:#fff;}
+.tbtn:hover{opacity:0.85;}
+.status-bar{padding:7px 24px;font-size:12px;color:#64748b;border-bottom:1px solid #1e293b;}
+.status-bar.ok{color:#22c55e;}
+.status-bar.err{color:#ef4444;}
+.status-bar.loading{color:#60a5fa;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 24px;}
+.stat{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px 16px;}
+.stat .sl{font-size:11px;color:#64748b;margin-bottom:6px;}
+.stat .sv{font-size:22px;font-weight:700;color:#f1f5f9;}
+.stat .sv.green{color:#22c55e;}
+.stat .sv.amber{color:#f59e0b;}
+.toolbar{padding:12px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.sinput{background:#1e293b;border:1px solid #334155;color:#e2e8f0;padding:7px 12px;border-radius:8px;font-size:12px;font-family:inherit;outline:none;width:200px;}
+.sinput:focus{border-color:#2563eb;}
+.sselect{background:#1e293b;border:1px solid #334155;color:#e2e8f0;padding:7px 12px;border-radius:8px;font-size:12px;font-family:inherit;outline:none;}
+.hint{font-size:11px;color:#475569;padding:0 24px 10px;}
+.table-wrap{padding:0 24px 32px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:900px;}
+thead th{padding:10px 12px;text-align:left;font-size:11px;color:#64748b;font-weight:600;border-bottom:2px solid #334155;white-space:nowrap;background:#1e293b;}
+tbody td{padding:9px 12px;font-size:12px;color:#cbd5e1;border-bottom:1px solid #1e293b;vertical-align:middle;}
+tbody tr:hover td{background:#1a2535;cursor:pointer;}
+.td-name{font-weight:700;color:#f1f5f9;white-space:nowrap;}
+.td-time{color:#64748b;font-size:11px;white-space:nowrap;}
+.td-ans{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bdg{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;}
+.bdg.blue{background:#1d4ed8;color:#bfdbfe;}
+.bdg.purple{background:#5b21b6;color:#ddd6fe;}
+.bdg.gray{background:#334155;color:#64748b;}
+.lbtn{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:inherit;text-decoration:none;}
+.lbtn.has{background:#0f766e;color:#99f6e4;}
+.lbtn.no{background:#334155;color:#64748b;cursor:default;}
+.empty-box{text-align:center;padding:64px 24px;color:#475569;}
+.empty-box .ei{font-size:48px;margin-bottom:14px;}
+.empty-box .et{font-size:15px;font-weight:600;color:#64748b;margin-bottom:8px;}
+.empty-box .es{font-size:13px;line-height:1.8;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal.open{display:flex;}
+.mbox{background:#1e293b;border:1px solid #334155;border-radius:14px;max-width:640px;width:100%;max-height:90vh;display:flex;flex-direction:column;}
+.mhead{padding:18px 22px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;}
+.mhead-t{font-size:15px;font-weight:700;color:#f1f5f9;}
+.mhead-s{font-size:11px;color:#64748b;margin-top:3px;}
+.mclose{background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;}
+.mclose:hover{color:#f1f5f9;}
+.mbody{padding:18px 22px;overflow-y:auto;}
+.clinks{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #334155;}
+.clrow{display:flex;align-items:center;gap:10px;background:#0f172a;border-radius:8px;padding:10px 14px;margin-bottom:8px;}
+.cllabel{font-size:11px;color:#64748b;font-weight:600;white-space:nowrap;min-width:70px;}
+.clurl{flex:1;font-size:11px;color:#60a5fa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.clurl.empty{color:#475569;font-style:italic;}
+.clbtn{padding:5px 12px;background:#0369a1;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.clbtn:disabled{background:#334155;color:#64748b;cursor:default;}
+.sec-t{font-size:11px;font-weight:700;color:#94a3b8;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid #1e293b;text-transform:uppercase;letter-spacing:0.5px;}
+.di{margin-bottom:10px;}
+.dq{font-size:11px;color:#64748b;margin-bottom:3px;}
+.da{font-size:13px;color:#e2e8f0;line-height:1.7;}
+.da.empty{color:#475569;font-style:italic;}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div>
+    <div class="top-title">교사용 답안 대시보드</div>
+    <div class="top-sub">정보 1차시 — CODAP으로 아시아 인구 살펴보기</div>
+  </div>
+  <div class="top-right">
+    <span class="auto-label"><span class="dot"></span>10초마다 자동 갱신</span>
+    <button class="tbtn blue" onclick="loadData()">🔄 새로고침</button>
+    <button class="tbtn green" onclick="exportCSV()">📥 엑셀 내보내기</button>
+    <button class="tbtn amber" onclick="window.open('https://docs.google.com/spreadsheets/d/1i_ykAV4-1z3GZnt4yM3U5Awtijy0wKapsNFPIZc1RcU/edit','_blank')">📊 구글 시트</button>
+  </div>
+</div>
+<div id="statusBar" class="status-bar loading">⏳ 데이터 불러오는 중...</div>
+<div class="stat-grid">
+  <div class="stat"><div class="sl">제출 학생</div><div class="sv green" id="s_count">—</div></div>
+  <div class="stat"><div class="sl">미제출 (21명 기준)</div><div class="sv amber" id="s_remain">—</div></div>
+  <div class="stat"><div class="sl">CODAP 링크 제출</div><div class="sv" id="s_links">—</div></div>
+  <div class="stat"><div class="sl">마지막 제출 학생</div><div class="sv" style="font-size:14px;" id="s_last">—</div></div>
+</div>
+<div class="toolbar">
+  <input class="sinput" id="search" type="text" placeholder="🔍 이름·반 검색..." oninput="render()">
+  <select class="sselect" id="sortBy" onchange="render()">
+    <option value="time">제출 시간순</option>
+    <option value="name">이름순</option>
+    <option value="class">반·번호순</option>
+  </select>
+</div>
+<div class="hint">※ 행을 클릭하면 전체 답안과 CODAP 링크를 볼 수 있습니다.</div>
+<div class="table-wrap">
+  <div id="emptyBox" class="empty-box">
+    <div class="ei">⏳</div>
+    <div class="et" id="emptyTitle">데이터 불러오는 중...</div>
+    <div class="es" id="emptyDesc">잠시만 기다려 주세요.</div>
+  </div>
+  <table id="mainTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>#</th><th>이름</th><th>학년·반</th><th>번호</th><th>제출 시간</th>
+        <th>그래프1</th><th>그래프2</th><th>그래프3</th>
+        <th>점 방향</th><th>가장 놀라운</th><th>더 알고 싶은 것</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+<div class="modal" id="modal">
+  <div class="mbox">
+    <div class="mhead">
+      <div><div class="mhead-t" id="mTitle">학생 답안 상세</div><div class="mhead-s" id="mSub"></div></div>
+      <button class="mclose" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+<script>
+var SHEET_ID = '1i_ykAV4-1z3GZnt4yM3U5Awtijy0wKapsNFPIZc1RcU';
+var TOTAL = 21;
+var allData = [];
+var SECS = [
+  {t:'그래프1 — 국가별 인구수', k:['그래프1-인구최대','그래프1-한국위치','그래프1-알게된사실'], l:['인구 최대 나라','한국 위치','알게 된 사실']},
+  {t:'그래프2 — 기대수명 vs 출산율', k:['그래프2-점방향','그래프2-한국위치','그래프2-알게된사실'], l:['점 방향','한국 위치','알게 된 사실']},
+  {t:'그래프3 — 노년비율', k:['그래프3-노년최대','그래프3-느낀점'], l:['노년 최대 나라','느낀 점']},
+  {t:'그래프 보기 전 예상', k:['예상1-인구최대','예상2-출산율','예상3-한국노년순위'], l:['인구 최대 예상','출산율 예측','한국 노년 순위 예상']},
+  {t:'종합 — 생각한 점', k:['가장놀라운그래프','왜놀라웠나','예상했던것','실제결과','더알고싶은것'], l:['가장 놀라운 그래프','왜 놀라웠나','예상했던 것','실제 결과','더 알고 싶은 것']}
+];
+function setStatus(msg,type){var el=document.getElementById('statusBar');el.textContent=msg;el.className='status-bar'+(type?' '+type:'');}
+function loadData(){
+  setStatus('⏳ 데이터 불러오는 중...','loading');
+  var s=document.createElement('script');
+  s.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&callback=handleData&t='+Date.now();
+  s.onerror=function(){setStatus('❌ 구글 시트 연결 실패. 시트 공유 설정을 확인해주세요.','err');showErr();};
+  document.head.appendChild(s);
+  setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},6000);
+}
+function handleData(res){
+  try{
+    if(!res||!res.table){setStatus('❌ 데이터 형식 오류','err');showErr();return;}
+    var cols=res.table.cols.map(function(c){return c.label||'';});
+    allData=[];
+    res.table.rows.forEach(function(row){
+      if(!row||!row.c)return;
+      var obj={};var hasData=false;
+      cols.forEach(function(h,i){var cell=row.c[i];var v=(cell&&cell.v!=null)?String(cell.v):'';obj[h]=v;if(v)hasData=true;});
+      if(hasData)allData.push(obj);
+    });
+    setStatus('✅ '+allData.length+'명 답안 로드 완료 — '+new Date().toLocaleTimeString('ko-KR'),'ok');
+    render();
+  }catch(e){setStatus('❌ 오류: '+e.message,'err');console.error(e);}
+}
+function showErr(){
+  document.getElementById('emptyBox').style.display='block';
+  document.getElementById('mainTable').style.display='none';
+  document.getElementById('emptyTitle').textContent='데이터를 불러올 수 없습니다';
+  document.getElementById('emptyDesc').textContent='구글 시트 공유 설정이 "링크가 있는 모든 사용자 — 뷰어"인지 확인해주세요.';
+}
+function render(){
+  var q=document.getElementById('search').value.toLowerCase();
+  var s=document.getElementById('sortBy').value;
+  var data=allData.filter(function(d){return !q||(d['이름']||'').toLowerCase().indexOf(q)>=0||(d['학년반']||'').toLowerCase().indexOf(q)>=0;});
+  if(s==='name')data.sort(function(a,b){return(a['이름']||'').localeCompare(b['이름']||'');});
+  else if(s==='class')data.sort(function(a,b){return(a['학년반']||'').localeCompare(b['학년반']||'')||(a['번호']||'').localeCompare(b['번호']||'');});
+  else data.sort(function(a,b){return new Date(b['저장시간'])-new Date(a['저장시간']);});
+  var lc=allData.filter(function(d){return d['CODAP링크1']||d['CODAP링크2']||d['CODAP링크3'];}).length;
+  document.getElementById('s_count').textContent=allData.length+'명';
+  document.getElementById('s_remain').textContent=Math.max(0,TOTAL-allData.length)+'명';
+  document.getElementById('s_links').textContent=lc+'명';
+  if(allData.length){var sorted=allData.slice().sort(function(a,b){return new Date(b['저장시간'])-new Date(a['저장시간']);});document.getElementById('s_last').textContent=sorted[0]['이름']||'?';}
+  var eb=document.getElementById('emptyBox'),mt=document.getElementById('mainTable');
+  if(!data.length){eb.style.display='block';mt.style.display='none';document.getElementById('emptyTitle').textContent=allData.length===0?'아직 제출된 답안이 없습니다':'검색 결과가 없습니다';document.getElementById('emptyDesc').textContent=allData.length===0?'학생이 [🖨️ 인쇄하기]를 누르면 답안이 저장됩니다.':'다른 검색어를 입력해 보세요.';return;}
+  eb.style.display='none';mt.style.display='table';
+  var rows='';
+  data.forEach(function(d,i){
+    var idx=allData.indexOf(d);
+    rows+='<tr onclick="showDetail('+idx+')">';
+    rows+='<td style="color:#475569">'+(i+1)+'</td>';
+    rows+='<td class="td-name">'+esc(d['이름']||'—')+'</td>';
+    rows+='<td>'+esc(d['학년반']||'—')+'</td>';
+    rows+='<td>'+esc(d['번호']||'—')+'</td>';
+    rows+='<td class="td-time">'+esc(d['저장시간']||'—')+'</td>';
+    rows+='<td>'+lb(d['CODAP링크1'],'그래프1')+'</td>';
+    rows+='<td>'+lb(d['CODAP링크2'],'그래프2')+'</td>';
+    rows+='<td>'+lb(d['CODAP링크3'],'그래프3')+'</td>';
+    rows+='<td>'+bdg(d['그래프2-점방향'],'blue')+'</td>';
+    rows+='<td>'+bdg(d['가장놀라운그래프'],'purple')+'</td>';
+    rows+='<td class="td-ans">'+esc(trunc(d['더알고싶은것']||'',20))+'</td>';
+    rows+='</tr>';
+  });
+  document.getElementById('tbody').innerHTML=rows;
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function trunc(s,n){return s.length>n?s.slice(0,n)+'…':s;}
+function lb(url,label){if(url)return '<a href="'+esc(url)+'" target="_blank" class="lbtn has" onclick="event.stopPropagation()">🔗 '+label+'</a>';return '<span class="lbtn no">미제출</span>';}
+function bdg(s,c){if(s)return '<span class="bdg '+c+'">'+esc(s)+'</span>';return '<span class="bdg gray">미입력</span>';}
+function showDetail(idx){
+  var d=allData[idx];if(!d)return;
+  document.getElementById('mTitle').textContent=(d['학년반']||'')+' '+(d['번호']||'')+'번 '+(d['이름']||'');
+  document.getElementById('mSub').textContent='제출: '+(d['저장시간']||'');
+  var html='<div class="clinks"><div class="sec-t">🔗 CODAP 그래프 링크</div>';
+  [['CODAP링크1','그래프 1'],['CODAP링크2','그래프 2'],['CODAP링크3','그래프 3']].forEach(function(p){
+    var url=d[p[0]]||'';
+    html+='<div class="clrow"><span class="cllabel">'+p[1]+'</span>';
+    html+='<span class="clurl'+(url?'':' empty')+'">'+esc(url||'제출하지 않음')+'</span>';
+    html+=url?'<button class="clbtn" onclick="window.open(''+url+'','_blank')">🔍 열기</button>':'<button class="clbtn" disabled>미제출</button>';
+    html+='</div>';
+  });
+  html+='</div>';
+  SECS.forEach(function(sec){
+    html+='<div class="sec-t">'+sec.t+'</div>';
+    sec.k.forEach(function(key,ki){
+      var val=d[key]||'';
+      html+='<div class="di"><div class="dq">'+sec.l[ki]+'</div><div class="da'+(val?'':' empty')+'">'+esc(val||'미입력')+'</div></div>';
+    });
+  });
+  document.getElementById('mBody').innerHTML=html;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+function exportCSV(){
+  if(!allData.length){alert('저장된 답안이 없습니다.');return;}
+  var keys=['저장시간','이름','학년반','번호','CODAP링크1','CODAP링크2','CODAP링크3'];
+  var labels=['제출시간','이름','학년반','번호','CODAP그래프1','CODAP그래프2','CODAP그래프3'];
+  SECS.forEach(function(sec){sec.k.forEach(function(k,i){keys.push(k);labels.push(sec.l[i]);});});
+  var rows=allData.map(function(d){return keys.map(function(k){return '"'+(d[k]||'').replace(/"/g,'""')+'"';}).join(',');});
+  var csv='﻿'+labels.map(function(l){return '"'+l+'"';}).join(',')+'
+'+rows.join('
+');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='학생답안_'+new Date().toLocaleDateString('ko-KR').replace(/\./g,'').replace(/ /g,'')+'.csv';
+  a.click();
+}
+loadData();
+setInterval(loadData,10000);
+</script>
+</body>
+</html>
