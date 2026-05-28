@@ -11,15 +11,15 @@
   .no-print{display:none!important;}
   .save-bar{display:none!important;}
   .page{box-shadow:none!important;margin:0!important;border-radius:0!important;padding:16px 24px!important;max-width:100%!important;}
-  .link-check-btn,.link-save-btn,.preview-btn{display:none!important;}
-  .graph-preview{display:block!important;height:320px!important;break-inside:avoid;}
+  .link-check-btn,.link-save-btn,.preview-btn,.preview-hint,.share-steps{display:none!important;}
+  
   .ans-input{border-bottom:1px solid #aaa!important;color:#111!important;background:transparent!important;}
   .ans-textarea{border:1px solid #ccc!important;color:#111!important;background:#fafafa!important;min-height:36px!important;}
   .codap-card,.think-box,.concept-2,.step3{break-inside:avoid;}
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20px;color:#111;font-size:13px;}
-.page{background:#fff;max-width:740px;margin:0 auto 90px;padding:32px 36px;box-shadow:0 2px 16px rgba(0,0,0,0.10);border-radius:8px;}
+.page{background:#fff;max-width:740px;width:100%;margin:0 auto 90px;padding:32px 36px;box-shadow:0 2px 16px rgba(0,0,0,0.10);border-radius:8px;overflow:hidden;}
 /* 헤더 */
 .doc-header{border-bottom:3px solid #1e3a8a;padding-bottom:10px;margin-bottom:16px;}
 .subject-badge{display:inline-block;background:#1e3a8a;color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:5px;}
@@ -76,7 +76,7 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 .think-q.q2::before{content:"Q2.";}
 .think-q.q3::before{content:"Q3.";}
 /* CODAP 카드 */
-.codap-card{border-radius:10px;margin-bottom:14px;border:1px solid #e5e7eb;overflow:hidden;}
+.codap-card{border-radius:10px;margin-bottom:14px;border:1px solid #e5e7eb;overflow:hidden;width:100%;}
 .codap-head{padding:10px 16px;display:flex;align-items:center;gap:10px;}
 .codap-head.c1{background:#1e3a8a;}
 .codap-head.c2{background:#0369a1;}
@@ -118,8 +118,8 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 .share-step{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:#374151;line-height:1.6;}
 .share-step .sn{background:#16a34a;color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;white-space:nowrap;margin-top:2px;flex-shrink:0;}
 .share-step .key{display:inline-block;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:0 6px;font-size:11px;font-weight:700;color:#166534;}
-.link-input-wrap{display:flex;gap:8px;align-items:center;margin-top:4px;flex-wrap:wrap;}
-.link-input{flex:1;min-width:200px;border:1.5px solid #86efac;border-radius:8px;padding:8px 12px;font-size:12px;font-family:inherit;outline:none;background:#fff;color:#111;}
+.link-input-wrap{display:flex;gap:8px;align-items:center;margin-top:4px;flex-wrap:wrap;width:100%;overflow:hidden;}
+.link-input{flex:1;min-width:0;border:1.5px solid #86efac;border-radius:8px;padding:8px 12px;font-size:12px;font-family:inherit;outline:none;background:#fff;color:#111;}
 .link-input:focus{border-color:#16a34a;}
 .link-check-btn{padding:7px 14px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;}
 .link-check-btn:hover{background:#15803d;}
@@ -127,13 +127,13 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 .link-status.ok{background:#f0fdf4;color:#16a34a;display:block;}
 .link-status.err{background:#fef2f2;color:#dc2626;display:block;}
 /* 그래프 미리보기 */
-.preview-btn{padding:7px 14px;background:#0369a1;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;}
-.preview-btn:hover{background:#0284c7;}
-.preview-btn.loaded{background:#16a34a;}
-.preview-btn:disabled{background:#93c5fd;cursor:not-allowed;}
+
+
+
+
 .graph-preview{width:100%;height:380px;border:2px solid #86efac;border-radius:8px;background:#fff;margin-top:10px;display:none;}
-.graph-preview.visible{display:block;}
-.preview-hint{font-size:11px;color:#16a34a;margin-top:5px;}
+
+
 /* 정리 */
 .summary-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-top:10px;}
 .summary-box .s-title{font-size:12px;font-weight:700;color:#1d4ed8;margin-bottom:10px;}
@@ -147,6 +147,9 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 .save-btn.print-btn{background:#7c3aed;color:#fff;}
 .save-btn.print-btn:hover{background:#6d28d9;}
 .save-btn.print-btn:disabled{background:#c4b5fd;cursor:not-allowed;}
+.save-btn.submit-btn{background:#16a34a;color:#fff;}
+.save-btn.submit-btn:hover{background:#15803d;}
+.save-btn.submit-btn:disabled{background:#86efac;cursor:not-allowed;}
 .save-msg{font-size:12px;color:#6b7280;text-align:center;}
 .save-msg.ok{color:#16a34a;font-weight:600;}
 .save-msg.err{color:#dc2626;font-weight:600;}
@@ -161,7 +164,7 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
   <div class="doc-title">CODAP으로 아시아 인구 자료 살펴보기</div>
   <div class="doc-sub">1차시 | 자료와 정보 이해하기 + 그래프로 패턴 찾기</div>
   <div class="info-row">
-    <div class="info-field">학년·반: <input id="f_class" type="text" placeholder="1학년 4반" style="width:90px"></div>
+    <div class="info-field">학년·반: <input id="f_class" type="text" placeholder="학년 반 입력" style="width:90px"></div>
     <div class="info-field">번호: <input id="f_num" type="text" placeholder="번" style="width:40px"></div>
     <div class="info-field">이름: <input id="f_name" type="text" placeholder="이름" style="width:70px"></div>
     <div class="info-field">날짜: <input id="f_date" type="text" placeholder="월  일" style="width:70px"></div>
@@ -181,7 +184,7 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 <div class="concept-2">
   <div class="concept-card blue">
     <div class="term">자료 (Data)</div>
-    <div class="def">측정하거나 수집한 <strong>날것의 숫자나 사실</strong>. 그냥 보면 무슨 뜻인지 바로 알기 어렵다.</div>
+    <div class="def">측정하거나 수집한 <strong>수집한 데이터</strong>. 그냥 보면 무슨 뜻인지 바로 알기 어렵다.</div>
     <div class="ex">예) 한국 기대수명: 84.3세 / 출산율: 0.72명</div>
   </div>
   <div class="concept-card green">
@@ -251,16 +254,13 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
       <div class="share-steps">
         <div class="share-step"><span class="sn">1</span><span>CODAP 상단 메뉴 <span class="key">File</span> 클릭</span></div>
         <div class="share-step"><span class="sn">2</span><span><span class="key">Share Document...</span> 클릭 → <span class="key">Copy Link</span> 클릭</span></div>
-        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 붙여넣기 → [그래프 불러오기] 클릭</span></div>
+        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 붙여넣기</span></div>
       </div>
       <div class="link-input-wrap">
         <input id="link1" class="link-input" type="text" placeholder="https://codap.concord.org/..." oninput="checkLink('link1','status1')">
         <button class="link-check-btn" onclick="window.open(document.getElementById('link1').value,'_blank')">🔍 새창 열기</button>
-        <button class="preview-btn" id="prevBtn1" onclick="loadPreview('link1','preview1','prevBtn1')">📊 그래프 불러오기</button>
       </div>
       <div class="link-status" id="status1"></div>
-      <iframe id="preview1" class="graph-preview" src="" allowfullscreen></iframe>
-      <div class="preview-hint" id="phint1"></div>
     </div>
     <div class="read-box">
       <div class="read-q">막대가 가장 긴 나라는 어디인가요?</div>
@@ -299,16 +299,13 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
       <div class="share-steps">
         <div class="share-step"><span class="sn">1</span><span>CODAP 상단 메뉴 <span class="key">File</span> 클릭</span></div>
         <div class="share-step"><span class="sn">2</span><span><span class="key">Share Document...</span> 클릭 → <span class="key">Copy Link</span> 클릭</span></div>
-        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 붙여넣기 → [그래프 불러오기] 클릭</span></div>
+        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 붙여넣기</span></div>
       </div>
       <div class="link-input-wrap">
         <input id="link2" class="link-input" type="text" placeholder="https://codap.concord.org/..." oninput="checkLink('link2','status2')">
         <button class="link-check-btn" onclick="window.open(document.getElementById('link2').value,'_blank')">🔍 새창 열기</button>
-        <button class="preview-btn" id="prevBtn2" onclick="loadPreview('link2','preview2','prevBtn2')">📊 그래프 불러오기</button>
       </div>
       <div class="link-status" id="status2"></div>
-      <iframe id="preview2" class="graph-preview" src="" allowfullscreen></iframe>
-      <div class="preview-hint" id="phint2"></div>
     </div>
     <div class="read-box">
       <div class="read-q">점들이 어느 방향으로 모여 있나요?</div>
@@ -342,16 +339,13 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
       <div class="share-steps">
         <div class="share-step"><span class="sn">1</span><span>CODAP 상단 메뉴 <span class="key">File</span> 클릭</span></div>
         <div class="share-step"><span class="sn">2</span><span><span class="key">Share Document...</span> 클릭 → <span class="key">Copy Link</span> 클릭</span></div>
-        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 붙여넣기 → [그래프 불러오기] 클릭</span></div>
+        <div class="share-step"><span class="sn">3</span><span>아래 칸에 <span class="key">Ctrl+V</span> 붙여넣기</span></div>
       </div>
       <div class="link-input-wrap">
         <input id="link3" class="link-input" type="text" placeholder="https://codap.concord.org/..." oninput="checkLink('link3','status3')">
         <button class="link-check-btn" onclick="window.open(document.getElementById('link3').value,'_blank')">🔍 새창 열기</button>
-        <button class="preview-btn" id="prevBtn3" onclick="loadPreview('link3','preview3','prevBtn3')">📊 그래프 불러오기</button>
       </div>
       <div class="link-status" id="status3"></div>
-      <iframe id="preview3" class="graph-preview" src="" allowfullscreen></iframe>
-      <div class="preview-hint" id="phint3"></div>
     </div>
     <div class="read-box">
       <div class="read-q">노년 비율이 가장 높은 나라는 어디인가요? 몇 %인가요?</div>
@@ -389,10 +383,10 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 
 <div class="summary-box" style="margin-top:14px;">
   <div class="s-title">오늘의 핵심 정리 — 빈칸을 채워보세요</div>
-  <p style="font-size:12px;line-height:2.8;color:#374151;">
-    날것의 숫자나 사실을 <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>(이)라 하고, 분석해 의미를 알아낸 것을 <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>(이)라 한다.<br>
-    자료 수집 → <span class="fill-wide">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> → 패턴 찾기 순으로 정보를 만든다.<br>
-    CODAP에서 그래프의 점을 클릭하면 테이블에서도 <span class="fill-wide">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>된다.
+  <p style="font-size:12px;line-height:3.2;color:#374151;">
+    수집한 데이터를 <input id="sum1" type="text" style="border:none;border-bottom:1.5px solid #2563eb;width:70px;font-size:12px;text-align:center;outline:none;background:transparent;font-family:inherit;">(이)라 하고, 분석해 의미를 알아낸 것을 <input id="sum2" type="text" style="border:none;border-bottom:1.5px solid #2563eb;width:70px;font-size:12px;text-align:center;outline:none;background:transparent;font-family:inherit;">(이)라 한다.<br>
+    자료 수집 → <input id="sum3" type="text" style="border:none;border-bottom:1.5px solid #2563eb;width:100px;font-size:12px;text-align:center;outline:none;background:transparent;font-family:inherit;"> → 패턴 찾기 순으로 정보를 만든다.<br>
+    CODAP에서 그래프의 점을 클릭하면 테이블에서도 <input id="sum4" type="text" style="border:none;border-bottom:1.5px solid #2563eb;width:100px;font-size:12px;text-align:center;outline:none;background:transparent;font-family:inherit;">된다.
   </p>
 </div>
 <div style="text-align:right;font-size:11px;color:#9ca3af;margin-top:12px;border-top:1px solid #e5e7eb;padding-top:8px;">
@@ -402,38 +396,87 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 
 <!-- 저장 바 -->
 <div class="save-bar no-print">
-  <div class="save-msg" id="saveMsg">이름·반·번호를 입력하고 인쇄 버튼을 눌러주세요</div>
+  <div style="font-size:11px;color:#6b7280;text-align:center;line-height:1.7;" id="saveMsg">
+    이름·반·번호를 입력하고 인쇄 버튼을 눌러주세요
+  </div>
   <button class="save-btn print-btn" id="printBtn" onclick="printPage()">🖨️ 인쇄하기</button>
 </div>
 
 <script>
 function getVal(id){ var el=document.getElementById(id); return el?el.value.trim():''; }
 
-function printPage(){
-  var name=getVal('f_name'), cls=getVal('f_class'), num=getVal('f_num');
-  if(!name||!cls){
-    var msg=document.getElementById('saveMsg');
-    msg.textContent='⚠️ 이름과 학년·반을 먼저 입력해주세요!';
-    msg.className='save-msg err';
+function submitToForm(){
+  var name  = getVal('f_name');
+  var cls   = getVal('f_class');
+  var num   = getVal('f_num');
+  var msg   = document.getElementById('saveMsg');
+  var btn   = document.getElementById('submitBtn');
+
+  if(!name || !cls){
+    msg.innerHTML = '<span style="color:#dc2626;font-weight:700;">⚠️ 이름과 학년·반을 먼저 입력해주세요!</span>';
     return;
   }
-  var filename=cls.replace(/\s/g,'')+'_'+num+'번_'+name+'_정보활동지';
-  var origTitle=document.title;
-  document.title=filename;
+
+  // 라디오 버튼 값 읽기
+  function getRadioVal(name){
+    var el = document.querySelector('input[name="'+name+'"]:checked');
+    return el ? el.parentElement.textContent.trim() : '';
+  }
+
+  // 폼 URL 생성 (사전 채우기 방식)
+  var base = 'https://docs.google.com/forms/d/e/1FAIpQLSdM2vjmqG5qinYhusqvCq0k8w38u-1PPsOPc8qw2mf0TuhiSQ/viewform?usp=pp_url';
+  var params = base;
+  params += '&entry.1716039769=' + encodeURIComponent(name);
+  params += '&entry.2128605314=' + encodeURIComponent(cls);
+  params += '&entry.269492020='  + encodeURIComponent(num);
+  params += '&entry.2089932851=' + encodeURIComponent(getVal('link1'));
+  params += '&entry.1013419546=' + encodeURIComponent(getVal('link2'));
+  params += '&entry.198062227='  + encodeURIComponent(getVal('link3'));
+  params += '&entry.352455542='  + encodeURIComponent(getVal('pre1'));
+  params += '&entry.92788086='   + encodeURIComponent(getRadioVal('pre2'));
+  params += '&entry.612279055='  + encodeURIComponent(getVal('pre3'));
+  params += '&entry.775815205='  + encodeURIComponent(getVal('g1_q1'));
+  params += '&entry.1847866961=' + encodeURIComponent(getVal('g1_q2'));
+  params += '&entry.99048308='   + encodeURIComponent(getVal('g1_q3'));
+  params += '&entry.380108634='  + encodeURIComponent(getRadioVal('g2_dir'));
+  params += '&entry.239763206='  + encodeURIComponent(getVal('g2_q2'));
+  params += '&entry.968318166='  + encodeURIComponent(getVal('g2_q3'));
+  params += '&entry.1124555570=' + encodeURIComponent(getVal('g3_q1'));
+  params += '&entry.1289349238=' + encodeURIComponent(getVal('g3_q2'));
+  params += '&entry.386763741='  + encodeURIComponent(getRadioVal('fin1'));
+  params += '&entry.8440362='    + encodeURIComponent(getVal('fin_q1'));
+
+  // 새창으로 폼 열기 (학생이 확인 후 제출)
+  window.open(params, '_blank');
+
+  msg.innerHTML = '<span style="color:#16a34a;font-weight:700;">✅ 구글 폼이 열렸어요! 내용을 확인하고 [제출] 버튼을 눌러주세요.</span>';
+  btn.textContent = '✅ 제출창 열림';
+  btn.style.background = '#0369a1';
+  setTimeout(function(){
+    btn.textContent = '📤 선생님께 제출하기';
+    btn.style.background = '';
+    msg.textContent = '이름·반·번호를 입력하고 버튼을 눌러주세요';
+  }, 5000);
+}
+
+function printPage(){
+  var name=getVal('f_name'), cls=getVal('f_class');
   var msg=document.getElementById('saveMsg');
-  msg.innerHTML='🖨️ 인쇄창에서 프린터를 <strong>"PDF로 저장"</strong>으로 선택하면 PDF로 저장돼요!';
-  msg.className='save-msg ok';
   var btn=document.getElementById('printBtn');
+  if(!name||!cls){
+    msg.innerHTML='<span style="color:#dc2626;font-weight:700;">⚠️ 이름과 학년·반을 먼저 입력해주세요!</span>';
+    return;
+  }
   btn.disabled=true;
+  btn.textContent='⏳ 잠깐...';
   setTimeout(function(){
     window.print();
-    document.title=origTitle;
     setTimeout(function(){
       btn.disabled=false;
+      btn.textContent='🖨️ 인쇄하기';
       msg.textContent='이름·반·번호를 입력하고 인쇄 버튼을 눌러주세요';
-      msg.className='save-msg';
-    },3000);
-  },400);
+    },2000);
+  },300);
 }
 
 function checkLink(inputId,statusId){
@@ -442,38 +485,14 @@ function checkLink(inputId,statusId){
   if(!val){status.className='link-status';status.textContent='';return;}
   if(val.startsWith('https://codap.concord.org')||val.startsWith('https://collaborative.concord.org')){
     status.className='link-status ok';
-    status.textContent='✅ 올바른 CODAP 링크입니다! [그래프 불러오기]를 클릭하세요.';
+    status.textContent='✅ 올바른 CODAP 링크입니다! [🔍 새창 열기]로 확인해보세요.';
   } else {
     status.className='link-status err';
     status.textContent='⚠️ CODAP 링크가 아닌 것 같아요. File → Share Document → Copy Link 순서로 복사해주세요.';
   }
 }
 
-function loadPreview(inputId,iframeId,btnId){
-  var url=document.getElementById(inputId).value.trim();
-  var iframe=document.getElementById(iframeId);
-  var btn=document.getElementById(btnId);
-  var num=iframeId.replace('preview','');
-  var hint=document.getElementById('phint'+num);
-  var status=document.getElementById('status'+num);
-  if(!url){
-    if(status){status.className='link-status err';status.textContent='⚠️ 링크를 먼저 붙여넣어 주세요.';}
-    return;
-  }
-  if(!url.startsWith('https://codap.concord.org')&&!url.startsWith('https://collaborative.concord.org')){
-    if(status){status.className='link-status err';status.textContent='⚠️ CODAP 링크가 아닌 것 같아요.';}
-    return;
-  }
-  btn.textContent='⏳ 불러오는 중...';
-  btn.disabled=true;
-  iframe.src=url;
-  iframe.classList.add('visible');
-  iframe.onload=function(){
-    btn.textContent='✅ 불러오기 완료';
-    btn.className='preview-btn loaded';
-    if(hint) hint.textContent='✅ 그래프가 로드됐어요! 인쇄 시 함께 출력됩니다.';
-  };
-}
+
 </script>
 </body>
 </html>

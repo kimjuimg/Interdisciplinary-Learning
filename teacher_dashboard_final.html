@@ -18,6 +18,7 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#0f172a;color:#e2e8
 .tbtn.blue{background:#2563eb;color:#fff;}
 .tbtn.green{background:#16a34a;color:#fff;}
 .tbtn.amber{background:#d97706;color:#fff;}
+.tbtn.purple{background:#7c3aed;color:#fff;}
 .tbtn:hover{opacity:0.85;}
 .status-bar{padding:7px 24px;font-size:12px;color:#64748b;border-bottom:1px solid #1e293b;}
 .status-bar.ok{color:#22c55e;}
@@ -87,15 +88,19 @@ tbody tr:hover td{background:#1a2535;cursor:pointer;}
     <button class="tbtn blue" onclick="loadData()">🔄 새로고침</button>
     <button class="tbtn green" onclick="exportCSV()">📥 엑셀 내보내기</button>
     <button class="tbtn amber" onclick="window.open('https://docs.google.com/spreadsheets/d/1i_ykAV4-1z3GZnt4yM3U5Awtijy0wKapsNFPIZc1RcU/edit','_blank')">📊 구글 시트</button>
+    <button class="tbtn purple" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdM2vjmqG5qinYhusqvCq0k8w38u-1PPsOPc8qw2mf0TuhiSQ/viewform','_blank')">📋 구글 폼</button>
   </div>
 </div>
+
 <div id="statusBar" class="status-bar loading">⏳ 데이터 불러오는 중...</div>
+
 <div class="stat-grid">
   <div class="stat"><div class="sl">제출 학생</div><div class="sv green" id="s_count">—</div></div>
   <div class="stat"><div class="sl">미제출 (21명 기준)</div><div class="sv amber" id="s_remain">—</div></div>
   <div class="stat"><div class="sl">CODAP 링크 제출</div><div class="sv" id="s_links">—</div></div>
-  <div class="stat"><div class="sl">마지막 제출 학생</div><div class="sv" style="font-size:14px;" id="s_last">—</div></div>
+  <div class="stat"><div class="sl">마지막 제출</div><div class="sv" style="font-size:14px;" id="s_last">—</div></div>
 </div>
+
 <div class="toolbar">
   <input class="sinput" id="search" type="text" placeholder="🔍 이름·반 검색..." oninput="render()">
   <select class="sselect" id="sortBy" onchange="render()">
@@ -104,7 +109,8 @@ tbody tr:hover td{background:#1a2535;cursor:pointer;}
     <option value="class">반·번호순</option>
   </select>
 </div>
-<div class="hint">※ 행을 클릭하면 전체 답안과 CODAP 링크를 볼 수 있습니다.</div>
+<div class="hint">※ 행을 클릭하면 전체 답안과 CODAP 링크를 볼 수 있습니다. 구글 폼 응답이 이 시트와 연결되어 있어야 합니다.</div>
+
 <div class="table-wrap">
   <div id="emptyBox" class="empty-box">
     <div class="ei">⏳</div>
@@ -116,12 +122,13 @@ tbody tr:hover td{background:#1a2535;cursor:pointer;}
       <tr>
         <th>#</th><th>이름</th><th>학년·반</th><th>번호</th><th>제출 시간</th>
         <th>그래프1</th><th>그래프2</th><th>그래프3</th>
-        <th>점 방향</th><th>가장 놀라운</th><th>더 알고 싶은 것</th>
+        <th>인구 최대</th><th>가장 놀라운</th><th>왜 놀라웠나</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
+
 <div class="modal" id="modal">
   <div class="mbox">
     <div class="mhead">
@@ -131,116 +138,190 @@ tbody tr:hover td{background:#1a2535;cursor:pointer;}
     <div class="mbody" id="mBody"></div>
   </div>
 </div>
+
 <script>
 var SHEET_ID = '1i_ykAV4-1z3GZnt4yM3U5Awtijy0wKapsNFPIZc1RcU';
 var TOTAL = 21;
 var allData = [];
+
+// 구글 폼 응답 컬럼 정의
+var COL = {
+  time:  '타임스탬프',
+  name:  '1. 이름',
+  cls:   '2.학년 반',
+  num:   '3.번호',
+  link1: '4.codap 링크1',
+  link2: '5.codap 링크2',
+  link3: '6.codap 링크3',
+  pre1:  '7. 예상1',
+  pre2:  '8. 예상2',
+  pre3:  '9. 예상3',
+  g1q1:  '10. 그래프1_인구최대',
+  g1q2:  '11. 그래프1_한국위치',
+  g1q3:  '12. 그래프1_알게된 사실',
+  g2dir: '13. 그래프2_점방향',
+  g2q2:  '14. 그래프2_한국위치',
+  g2q3:  '15. 그래프2_알게된 사실',
+  g3q1:  '16. 그래프3_노년 최대',
+  g3q2:  '17. 그래프3_느낀점',
+  fin1:  '18. 가장 놀라운 그래프',
+  finq1: '19. 왜 놀라웠나요?'
+};
+
 var SECS = [
-  {t:'그래프1 — 국가별 인구수', k:['그래프1-인구최대','그래프1-한국위치','그래프1-알게된사실'], l:['인구 최대 나라','한국 위치','알게 된 사실']},
-  {t:'그래프2 — 기대수명 vs 출산율', k:['그래프2-점방향','그래프2-한국위치','그래프2-알게된사실'], l:['점 방향','한국 위치','알게 된 사실']},
-  {t:'그래프3 — 노년비율', k:['그래프3-노년최대','그래프3-느낀점'], l:['노년 최대 나라','느낀 점']},
-  {t:'그래프 보기 전 예상', k:['예상1-인구최대','예상2-출산율','예상3-한국노년순위'], l:['인구 최대 예상','출산율 예측','한국 노년 순위 예상']},
-  {t:'종합 — 생각한 점', k:['가장놀라운그래프','왜놀라웠나','예상했던것','실제결과','더알고싶은것'], l:['가장 놀라운 그래프','왜 놀라웠나','예상했던 것','실제 결과','더 알고 싶은 것']}
+  {t:'CODAP 그래프 링크', keys:['link1','link2','link3'], ls:['그래프1','그래프2','그래프3']},
+  {t:'그래프 보기 전 예상', keys:['pre1','pre2','pre3'], ls:['예상1','예상2','예상3']},
+  {t:'그래프1 — 국가별 인구수', keys:['g1q1','g1q2','g1q3'], ls:['인구 최대 나라','한국 위치','알게 된 사실']},
+  {t:'그래프2 — 기대수명 vs 출산율', keys:['g2dir','g2q2','g2q3'], ls:['점 방향','한국 위치','알게 된 사실']},
+  {t:'그래프3 — 노년비율', keys:['g3q1','g3q2'], ls:['노년 최대 나라','느낀 점']},
+  {t:'종합 — 생각한 점', keys:['fin1','finq1'], ls:['가장 놀라운 그래프','왜 놀라웠나']}
 ];
-function setStatus(msg,type){var el=document.getElementById('statusBar');el.textContent=msg;el.className='status-bar'+(type?' '+type:'');}
+
+function setStatus(msg,type){
+  var el=document.getElementById('statusBar');
+  el.textContent=msg;
+  el.className='status-bar'+(type?' '+type:'');
+}
+
 function loadData(){
   setStatus('⏳ 데이터 불러오는 중...','loading');
   var s=document.createElement('script');
   s.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&callback=handleData&t='+Date.now();
-  s.onerror=function(){setStatus('❌ 구글 시트 연결 실패. 시트 공유 설정을 확인해주세요.','err');showErr();};
+  s.onerror=function(){
+    setStatus('❌ 구글 시트 연결 실패. 시트가 공개(뷰어) 설정인지 확인해주세요.','err');
+    showErr('데이터를 불러올 수 없습니다','구글 시트 공유 설정이 "링크가 있는 모든 사용자 — 뷰어"인지 확인해주세요.');
+  };
   document.head.appendChild(s);
   setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},6000);
 }
+
 function handleData(res){
   try{
-    if(!res||!res.table){setStatus('❌ 데이터 형식 오류','err');showErr();return;}
+    if(!res||!res.table){setStatus('❌ 데이터 없음','err');showErr('아직 제출된 답안이 없습니다','학생이 [선생님께 제출하기]를 누르면 여기에 나타납니다.');return;}
     var cols=res.table.cols.map(function(c){return c.label||'';});
     allData=[];
     res.table.rows.forEach(function(row){
       if(!row||!row.c)return;
       var obj={};var hasData=false;
-      cols.forEach(function(h,i){var cell=row.c[i];var v=(cell&&cell.v!=null)?String(cell.v):'';obj[h]=v;if(v)hasData=true;});
+      cols.forEach(function(h,i){
+        var cell=row.c[i];
+        var v=(cell&&cell.v!=null)?String(cell.v):'';
+        obj[h]=v;if(v)hasData=true;
+      });
       if(hasData)allData.push(obj);
     });
     setStatus('✅ '+allData.length+'명 답안 로드 완료 — '+new Date().toLocaleTimeString('ko-KR'),'ok');
     render();
   }catch(e){setStatus('❌ 오류: '+e.message,'err');console.error(e);}
 }
-function showErr(){
+
+function showErr(title,desc){
   document.getElementById('emptyBox').style.display='block';
   document.getElementById('mainTable').style.display='none';
-  document.getElementById('emptyTitle').textContent='데이터를 불러올 수 없습니다';
-  document.getElementById('emptyDesc').textContent='구글 시트 공유 설정이 "링크가 있는 모든 사용자 — 뷰어"인지 확인해주세요.';
+  document.getElementById('emptyTitle').textContent=title;
+  document.getElementById('emptyDesc').textContent=desc;
 }
+
+function g(d,key){return d[COL[key]]||'';}
+
 function render(){
   var q=document.getElementById('search').value.toLowerCase();
   var s=document.getElementById('sortBy').value;
-  var data=allData.filter(function(d){return !q||(d['이름']||'').toLowerCase().indexOf(q)>=0||(d['학년반']||'').toLowerCase().indexOf(q)>=0;});
-  if(s==='name')data.sort(function(a,b){return(a['이름']||'').localeCompare(b['이름']||'');});
-  else if(s==='class')data.sort(function(a,b){return(a['학년반']||'').localeCompare(b['학년반']||'')||(a['번호']||'').localeCompare(b['번호']||'');});
-  else data.sort(function(a,b){return new Date(b['저장시간'])-new Date(a['저장시간']);});
-  var lc=allData.filter(function(d){return d['CODAP링크1']||d['CODAP링크2']||d['CODAP링크3'];}).length;
+  var data=allData.filter(function(d){
+    return !q||g(d,'name').toLowerCase().indexOf(q)>=0||g(d,'cls').toLowerCase().indexOf(q)>=0;
+  });
+  if(s==='name')data.sort(function(a,b){return g(a,'name').localeCompare(g(b,'name'));});
+  else if(s==='class')data.sort(function(a,b){return g(a,'cls').localeCompare(g(b,'cls'))||g(a,'num').localeCompare(g(b,'num'));});
+  else data.sort(function(a,b){return new Date(b[COL.time])-new Date(a[COL.time]);});
+
+  var lc=allData.filter(function(d){return g(d,'link1')||g(d,'link2')||g(d,'link3');}).length;
   document.getElementById('s_count').textContent=allData.length+'명';
   document.getElementById('s_remain').textContent=Math.max(0,TOTAL-allData.length)+'명';
   document.getElementById('s_links').textContent=lc+'명';
-  if(allData.length){var sorted=allData.slice().sort(function(a,b){return new Date(b['저장시간'])-new Date(a['저장시간']);});document.getElementById('s_last').textContent=sorted[0]['이름']||'?';}
-  var eb=document.getElementById('emptyBox'),mt=document.getElementById('mainTable');
-  if(!data.length){eb.style.display='block';mt.style.display='none';document.getElementById('emptyTitle').textContent=allData.length===0?'아직 제출된 답안이 없습니다':'검색 결과가 없습니다';document.getElementById('emptyDesc').textContent=allData.length===0?'학생이 [🖨️ 인쇄하기]를 누르면 답안이 저장됩니다.':'다른 검색어를 입력해 보세요.';return;}
-  eb.style.display='none';mt.style.display='table';
+  if(allData.length){
+    var sorted=allData.slice().sort(function(a,b){return new Date(b[COL.time])-new Date(a[COL.time]);});
+    document.getElementById('s_last').textContent=g(sorted[0],'name')||'?';
+  }
+
+  if(!data.length){
+    showErr(allData.length===0?'아직 제출된 답안이 없습니다':'검색 결과가 없습니다',
+            allData.length===0?'학생이 [선생님께 제출하기]를 누르면 여기에 나타납니다.':'다른 검색어를 입력해 보세요.');
+    return;
+  }
+  document.getElementById('emptyBox').style.display='none';
+  document.getElementById('mainTable').style.display='table';
+
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'…':s||'';}
+  function lb(url,label){
+    if(url)return '<a href="'+esc(url)+'" target="_blank" class="lbtn has" onclick="event.stopPropagation()">🔗 '+label+'</a>';
+    return '<span class="lbtn no">미제출</span>';
+  }
+  function bdg(s,c){
+    if(s)return '<span class="bdg '+c+'">'+esc(s)+'</span>';
+    return '<span class="bdg gray">미입력</span>';
+  }
+
   var rows='';
   data.forEach(function(d,i){
     var idx=allData.indexOf(d);
     rows+='<tr onclick="showDetail('+idx+')">';
     rows+='<td style="color:#475569">'+(i+1)+'</td>';
-    rows+='<td class="td-name">'+esc(d['이름']||'—')+'</td>';
-    rows+='<td>'+esc(d['학년반']||'—')+'</td>';
-    rows+='<td>'+esc(d['번호']||'—')+'</td>';
-    rows+='<td class="td-time">'+esc(d['저장시간']||'—')+'</td>';
-    rows+='<td>'+lb(d['CODAP링크1'],'그래프1')+'</td>';
-    rows+='<td>'+lb(d['CODAP링크2'],'그래프2')+'</td>';
-    rows+='<td>'+lb(d['CODAP링크3'],'그래프3')+'</td>';
-    rows+='<td>'+bdg(d['그래프2-점방향'],'blue')+'</td>';
-    rows+='<td>'+bdg(d['가장놀라운그래프'],'purple')+'</td>';
-    rows+='<td class="td-ans">'+esc(trunc(d['더알고싶은것']||'',20))+'</td>';
+    rows+='<td class="td-name">'+esc(g(d,'name')||'—')+'</td>';
+    rows+='<td>'+esc(g(d,'cls')||'—')+'</td>';
+    rows+='<td>'+esc(g(d,'num')||'—')+'</td>';
+    rows+='<td class="td-time">'+esc(g(d,'time')||'—')+'</td>';
+    rows+='<td>'+lb(g(d,'link1'),'그래프1')+'</td>';
+    rows+='<td>'+lb(g(d,'link2'),'그래프2')+'</td>';
+    rows+='<td>'+lb(g(d,'link3'),'그래프3')+'</td>';
+    rows+='<td class="td-ans">'+esc(trunc(g(d,'g1q1'),20))+'</td>';
+    rows+='<td>'+bdg(g(d,'fin1'),'purple')+'</td>';
+    rows+='<td class="td-ans">'+esc(trunc(g(d,'finq1'),20))+'</td>';
     rows+='</tr>';
   });
   document.getElementById('tbody').innerHTML=rows;
 }
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function trunc(s,n){return s.length>n?s.slice(0,n)+'…':s;}
-function lb(url,label){if(url)return '<a href="'+esc(url)+'" target="_blank" class="lbtn has" onclick="event.stopPropagation()">🔗 '+label+'</a>';return '<span class="lbtn no">미제출</span>';}
-function bdg(s,c){if(s)return '<span class="bdg '+c+'">'+esc(s)+'</span>';return '<span class="bdg gray">미입력</span>';}
+
 function showDetail(idx){
   var d=allData[idx];if(!d)return;
-  document.getElementById('mTitle').textContent=(d['학년반']||'')+' '+(d['번호']||'')+'번 '+(d['이름']||'');
-  document.getElementById('mSub').textContent='제출: '+(d['저장시간']||'');
+  document.getElementById('mTitle').textContent=g(d,'cls')+' '+g(d,'num')+'번 '+g(d,'name');
+  document.getElementById('mSub').textContent='제출: '+g(d,'time');
+
   var html='<div class="clinks"><div class="sec-t">🔗 CODAP 그래프 링크</div>';
-  [['CODAP링크1','그래프 1'],['CODAP링크2','그래프 2'],['CODAP링크3','그래프 3']].forEach(function(p){
-    var url=d[p[0]]||'';
+  [['link1','그래프 1'],['link2','그래프 2'],['link3','그래프 3']].forEach(function(p){
+    var url=g(d,p[0]);
     html+='<div class="clrow"><span class="cllabel">'+p[1]+'</span>';
     html+='<span class="clurl'+(url?'':' empty')+'">'+esc(url||'제출하지 않음')+'</span>';
     html+=url?'<button class="clbtn" onclick="window.open(''+url+'','_blank')">🔍 열기</button>':'<button class="clbtn" disabled>미제출</button>';
     html+='</div>';
   });
   html+='</div>';
-  SECS.forEach(function(sec){
+
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  SECS.slice(1).forEach(function(sec){
     html+='<div class="sec-t">'+sec.t+'</div>';
-    sec.k.forEach(function(key,ki){
-      var val=d[key]||'';
-      html+='<div class="di"><div class="dq">'+sec.l[ki]+'</div><div class="da'+(val?'':' empty')+'">'+esc(val||'미입력')+'</div></div>';
+    sec.keys.forEach(function(key,ki){
+      var val=g(d,key);
+      html+='<div class="di"><div class="dq">'+sec.ls[ki]+'</div>';
+      html+='<div class="da'+(val?'':' empty')+'">'+esc(val||'미입력')+'</div></div>';
     });
   });
+
   document.getElementById('mBody').innerHTML=html;
   document.getElementById('modal').classList.add('open');
 }
+
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
 function exportCSV(){
   if(!allData.length){alert('저장된 답안이 없습니다.');return;}
-  var keys=['저장시간','이름','학년반','번호','CODAP링크1','CODAP링크2','CODAP링크3'];
-  var labels=['제출시간','이름','학년반','번호','CODAP그래프1','CODAP그래프2','CODAP그래프3'];
-  SECS.forEach(function(sec){sec.k.forEach(function(k,i){keys.push(k);labels.push(sec.l[i]);});});
-  var rows=allData.map(function(d){return keys.map(function(k){return '"'+(d[k]||'').replace(/"/g,'""')+'"';}).join(',');});
+  var keys=Object.keys(COL);
+  var labels=keys.map(function(k){return COL[k];});
+  var rows=allData.map(function(d){
+    return keys.map(function(k){return '"'+(g(d,k)||'').replace(/"/g,'""')+'"';}).join(',');
+  });
   var csv='﻿'+labels.map(function(l){return '"'+l+'"';}).join(',')+'
 '+rows.join('
 ');
@@ -249,6 +330,7 @@ function exportCSV(){
   a.download='학생답안_'+new Date().toLocaleDateString('ko-KR').replace(/\./g,'').replace(/ /g,'')+'.csv';
   a.click();
 }
+
 loadData();
 setInterval(loadData,10000);
 </script>
