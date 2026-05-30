@@ -7,42 +7,61 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-.wrap{max-width:500px;width:100%;text-align:center;}
+.wrap{max-width:520px;width:100%;text-align:center;}
 .title{font-size:22px;font-weight:700;color:#1e3a8a;margin-bottom:6px;}
-.sub{font-size:13px;color:#6b7280;margin-bottom:40px;}
+.sub{font-size:13px;color:#6b7280;margin-bottom:32px;}
 .cards{display:flex;flex-direction:column;gap:16px;}
-.card{background:#fff;border-radius:14px;padding:28px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.08);text-decoration:none;display:block;transition:transform 0.15s,box-shadow 0.15s;border:2px solid transparent;}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.08);text-decoration:none;display:block;transition:transform 0.15s,box-shadow 0.15s;border:2px solid transparent;}
 .card:hover{transform:translateY(-3px);box-shadow:0 6px 24px rgba(0,0,0,0.13);}
 .card.student{border-color:#bfdbfe;}
-.card.teacher{border-color:#334155;}
-.card-icon{font-size:36px;margin-bottom:10px;}
+.card.teacher{border-color:#334155;background:#1e293b;}
+.card-icon{font-size:32px;margin-bottom:8px;}
 .card-title{font-size:17px;font-weight:700;margin-bottom:5px;}
 .card.student .card-title{color:#1e3a8a;}
 .card.teacher .card-title{color:#f1f5f9;}
-.card.teacher{background:#1e293b;}
 .card-desc{font-size:12px;}
 .card.student .card-desc{color:#6b7280;}
 .card.teacher .card-desc{color:#94a3b8;}
-.source{font-size:11px;color:#9ca3af;margin-top:28px;}
+.card-bottom{display:flex;gap:10px;margin-top:14px;justify-content:center;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:inherit;text-decoration:none;transition:opacity 0.15s;}
+.btn:hover{opacity:0.85;}
+.btn.open{background:#2563eb;color:#fff;}
+
+.btn.open-dark{background:#3b82f6;color:#fff;}
+.source{font-size:11px;color:#9ca3af;margin-top:24px;}
+
 </style>
 </head>
 <body>
+
 <div class="wrap">
   <div class="title">아시아 인구 데이터 탐구</div>
   <div class="sub">정보 × 사회 융합 수업 | Cross-curricular Integration</div>
   <div class="cards">
-    <a class="card student" href="student_worksheet_final.html">
+
+    <div class="card student">
       <div class="card-icon">📋</div>
       <div class="card-title">학생용 활동지</div>
       <div class="card-desc">CODAP으로 아시아 인구 데이터를 분석하고 그래프를 만들어보세요</div>
-    </a>
-    <a class="card teacher" href="teacher_dashboard_final.html">
+      <div class="card-bottom">
+        <a class="btn open" href="student_worksheet_final.html">▶ 활동지 열기</a>
+
+      </div>
+    </div>
+
+    <div class="card teacher">
       <div class="card-icon">🖥️</div>
       <div class="card-title">교사용 대시보드</div>
       <div class="card-desc">학생 답안 현황과 CODAP 링크를 확인하세요</div>
-    </a>
+      <div class="card-bottom">
+        <a class="btn open-dark" href="teacher_dashboard_final.html">▶ 대시보드 열기</a>
+
+      </div>
+    </div>
+
   </div>
   <div class="source">출처: UN World Population Prospects 2024</div>
 </div>
+
 </body>
 </html>
