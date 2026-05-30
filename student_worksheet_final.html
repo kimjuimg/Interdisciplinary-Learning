@@ -427,23 +427,29 @@ function submitToForm(){
   }
 
   var url = 'https://docs.google.com/forms/d/e/1FAIpQLSdM2vjmqG5qinYhusqvCq0k8w38u-1PPsOPc8qw2mf0TuhiSQ/viewform?usp=pp_url';
+  // 섹션1 — 기본정보
   url += '&entry.1716039769=' + encodeURIComponent(name);
   url += '&entry.2128605314=' + encodeURIComponent(cls);
   url += '&entry.269492020='  + encodeURIComponent(num);
+  // 섹션1 — 예상 (4,5,6번)
   url += '&entry.2089932851=' + encodeURIComponent(getVal('pre1'));
   url += '&entry.1013419546=' + encodeURIComponent(getRadioVal('pre2'));
   url += '&entry.198062227='  + encodeURIComponent(getVal('pre3'));
+  // 섹션2 — 그래프1 (7,8,9,10번)
   url += '&entry.352455542='  + encodeURIComponent(getVal('link1'));
   url += '&entry.92788086='   + encodeURIComponent(getVal('g1_q1'));
   url += '&entry.612279055='  + encodeURIComponent(getVal('g1_q2'));
   url += '&entry.775815205='  + encodeURIComponent(getVal('g1_q3'));
+  // 섹션3 — 그래프2 (11,12,13,14번)
   url += '&entry.1847866961=' + encodeURIComponent(getVal('link2'));
   url += '&entry.99048308='   + encodeURIComponent(getRadioVal('g2_dir'));
   url += '&entry.380108634='  + encodeURIComponent(getVal('g2_q2'));
   url += '&entry.1529407625=' + encodeURIComponent(getVal('g2_q3'));
+  // 섹션4 — 그래프3 (15,16,17번)
   url += '&entry.968318166='  + encodeURIComponent(getVal('link3'));
   url += '&entry.1124555570=' + encodeURIComponent(getVal('g3_q1'));
   url += '&entry.1289349238=' + encodeURIComponent(getVal('g3_q2'));
+  // 섹션5 — 종합 (18,19,20,21번)
   url += '&entry.386763741='  + encodeURIComponent(getRadioVal('fin1'));
   url += '&entry.8440362='    + encodeURIComponent(getVal('fin_q1'));
   url += '&entry.1322835202=' + encodeURIComponent(getVal('fin_q2a') + ' → ' + getVal('fin_q2b'));
