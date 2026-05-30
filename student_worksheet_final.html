@@ -410,57 +410,55 @@ body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:20p
 function getVal(id){ var el=document.getElementById(id); return el?el.value.trim():''; }
 
 function submitToForm(){
-  var name  = getVal('f_name');
-  var cls   = getVal('f_class');
-  var num   = getVal('f_num');
-  var msg   = document.getElementById('saveMsg');
-  var btn   = document.getElementById('submitBtn');
+  var name = getVal('f_name');
+  var cls  = getVal('f_class');
+  var num  = getVal('f_num');
+  var msg  = document.getElementById('saveMsg');
+  var btn  = document.getElementById('submitBtn');
 
   if(!name || !cls){
     msg.innerHTML = '<span style="color:#dc2626;font-weight:700;">⚠️ 이름과 학년·반을 먼저 입력해주세요!</span>';
     return;
   }
 
-  // 라디오 버튼 값 읽기
-  function getRadioVal(name){
-    var el = document.querySelector('input[name="'+name+'"]:checked');
+  function getRadioVal(nm){
+    var el = document.querySelector('input[name="'+nm+'"]:checked');
     return el ? el.parentElement.textContent.trim() : '';
   }
 
-  // 폼 URL 생성 (사전 채우기 방식)
-  var base = 'https://docs.google.com/forms/d/e/1FAIpQLSdM2vjmqG5qinYhusqvCq0k8w38u-1PPsOPc8qw2mf0TuhiSQ/viewform?usp=pp_url';
-  var params = base;
-  params += '&entry.1716039769=' + encodeURIComponent(name);
-  params += '&entry.2128605314=' + encodeURIComponent(cls);
-  params += '&entry.269492020='  + encodeURIComponent(num);
-  params += '&entry.2089932851=' + encodeURIComponent(getVal('link1'));
-  params += '&entry.1013419546=' + encodeURIComponent(getVal('link2'));
-  params += '&entry.198062227='  + encodeURIComponent(getVal('link3'));
-  params += '&entry.352455542='  + encodeURIComponent(getVal('pre1'));
-  params += '&entry.92788086='   + encodeURIComponent(getRadioVal('pre2'));
-  params += '&entry.612279055='  + encodeURIComponent(getVal('pre3'));
-  params += '&entry.775815205='  + encodeURIComponent(getVal('g1_q1'));
-  params += '&entry.1847866961=' + encodeURIComponent(getVal('g1_q2'));
-  params += '&entry.99048308='   + encodeURIComponent(getVal('g1_q3'));
-  params += '&entry.380108634='  + encodeURIComponent(getRadioVal('g2_dir'));
-  params += '&entry.239763206='  + encodeURIComponent(getVal('g2_q2'));
-  params += '&entry.968318166='  + encodeURIComponent(getVal('g2_q3'));
-  params += '&entry.1124555570=' + encodeURIComponent(getVal('g3_q1'));
-  params += '&entry.1289349238=' + encodeURIComponent(getVal('g3_q2'));
-  params += '&entry.386763741='  + encodeURIComponent(getRadioVal('fin1'));
-  params += '&entry.8440362='    + encodeURIComponent(getVal('fin_q1'));
+  var url = 'https://docs.google.com/forms/d/e/1FAIpQLSdM2vjmqG5qinYhusqvCq0k8w38u-1PPsOPc8qw2mf0TuhiSQ/viewform?usp=pp_url';
+  url += '&entry.1716039769=' + encodeURIComponent(name);
+  url += '&entry.2128605314=' + encodeURIComponent(cls);
+  url += '&entry.269492020='  + encodeURIComponent(num);
+  url += '&entry.2089932851=' + encodeURIComponent(getVal('pre1'));
+  url += '&entry.1013419546=' + encodeURIComponent(getRadioVal('pre2'));
+  url += '&entry.198062227='  + encodeURIComponent(getVal('pre3'));
+  url += '&entry.352455542='  + encodeURIComponent(getVal('link1'));
+  url += '&entry.92788086='   + encodeURIComponent(getVal('g1_q1'));
+  url += '&entry.612279055='  + encodeURIComponent(getVal('g1_q2'));
+  url += '&entry.775815205='  + encodeURIComponent(getVal('g1_q3'));
+  url += '&entry.1847866961=' + encodeURIComponent(getVal('link2'));
+  url += '&entry.99048308='   + encodeURIComponent(getRadioVal('g2_dir'));
+  url += '&entry.380108634='  + encodeURIComponent(getVal('g2_q2'));
+  url += '&entry.1529407625=' + encodeURIComponent(getVal('g2_q3'));
+  url += '&entry.968318166='  + encodeURIComponent(getVal('link3'));
+  url += '&entry.1124555570=' + encodeURIComponent(getVal('g3_q1'));
+  url += '&entry.1289349238=' + encodeURIComponent(getVal('g3_q2'));
+  url += '&entry.386763741='  + encodeURIComponent(getRadioVal('fin1'));
+  url += '&entry.8440362='    + encodeURIComponent(getVal('fin_q1'));
+  url += '&entry.1322835202=' + encodeURIComponent(getVal('fin_q2a') + ' → ' + getVal('fin_q2b'));
+  url += '&entry.497795957='  + encodeURIComponent(getVal('fin_q3'));
 
-  // 새창으로 폼 열기 (학생이 확인 후 제출)
-  window.open(params, '_blank');
+  window.open(url, '_blank');
 
-  msg.innerHTML = '<span style="color:#16a34a;font-weight:700;">✅ 구글 폼이 열렸어요! 내용을 확인하고 [제출] 버튼을 눌러주세요.</span>';
   btn.textContent = '✅ 제출창 열림';
-  btn.style.background = '#0369a1';
+  btn.disabled = true;
+  msg.innerHTML = '<span style="color:#16a34a;font-weight:700;">✅ 구글 폼이 열렸어요! 내용 확인 후 [제출] 버튼을 눌러주세요.</span>';
   setTimeout(function(){
     btn.textContent = '📤 선생님께 제출하기';
-    btn.style.background = '';
+    btn.disabled = false;
     msg.textContent = '이름·반·번호를 입력하고 버튼을 눌러주세요';
-  }, 5000);
+  }, 6000);
 }
 
 function submitToForm(){

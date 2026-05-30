@@ -169,12 +169,11 @@ var COL = {
 };
 
 var SECS = [
-  {t:'CODAP 그래프 링크', keys:['link1','link2','link3'], ls:['그래프1','그래프2','그래프3']},
-  {t:'그래프 보기 전 예상', keys:['pre1','pre2','pre3'], ls:['예상1','예상2','예상3']},
-  {t:'그래프1 — 국가별 인구수', keys:['g1q1','g1q2','g1q3'], ls:['인구 최대 나라','한국 위치','알게 된 사실']},
-  {t:'그래프2 — 기대수명 vs 출산율', keys:['g2dir','g2q2','g2q3'], ls:['점 방향','한국 위치','알게 된 사실']},
-  {t:'그래프3 — 노년비율', keys:['g3q1','g3q2'], ls:['노년 최대 나라','느낀 점']},
-  {t:'종합 — 생각한 점', keys:['fin1','finq1'], ls:['가장 놀라운 그래프','왜 놀라웠나']}
+  {t:'그래프 보기 전 예상', keys:['pre1','pre2','pre3'], ls:['예상1 — 인구 최대 나라','예상2 — 출산율','예상3 — 한국 노년 순위']},
+  {t:'그래프1 — 국가별 인구수', keys:['link1','g1q1','g1q2','g1q3'], ls:['CODAP 링크','인구 최대 나라','한국 위치','알게 된 사실']},
+  {t:'그래프2 — 기대수명 vs 출산율', keys:['link2','g2dir','g2q2','g2q3'], ls:['CODAP 링크','점 방향','한국 위치','알게 된 사실']},
+  {t:'그래프3 — 노년비율', keys:['link3','g3q1','g3q2'], ls:['CODAP 링크','노년 최대 나라','느낀 점']},
+  {t:'종합 — 생각한 점', keys:['fin1','finq1','finq2','finq3'], ls:['가장 놀라운 그래프','왜 놀라웠나','예상과 실제','더 알고 싶은 것']}
 ];
 
 function setStatus(msg,type){
@@ -276,7 +275,7 @@ function render(){
     rows+='<td>'+lb(g(d,'link3'),'그래프3')+'</td>';
     rows+='<td class="td-ans">'+esc(trunc(g(d,'g1q1'),20))+'</td>';
     rows+='<td>'+bdg(g(d,'fin1'),'purple')+'</td>';
-    rows+='<td class="td-ans">'+esc(trunc(g(d,'finq1'),20))+'</td>';
+    rows+='<td class="td-ans">'+esc(trunc(g(d,'finq3'),20))+'</td>';
     rows+='</tr>';
   });
   document.getElementById('tbody').innerHTML=rows;
@@ -288,7 +287,7 @@ function showDetail(idx){
   document.getElementById('mSub').textContent='제출: '+g(d,'time');
 
   var html='<div class="clinks"><div class="sec-t">🔗 CODAP 그래프 링크</div>';
-  [['link1','그래프 1'],['link2','그래프 2'],['link3','그래프 3']].forEach(function(p){
+  [['link1','그래프 1 링크'],['link2','그래프 2 링크'],['link3','그래프 3 링크']].forEach(function(p){
     var url=g(d,p[0]);
     html+='<div class="clrow"><span class="cllabel">'+p[1]+'</span>';
     html+='<span class="clurl'+(url?'':' empty')+'">'+esc(url||'제출하지 않음')+'</span>';
