@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수행평가 — 아시아 인구 데이터 자유 탐구</title>
+<style>
+@media print {
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  body{background:#fff!important;padding:0!important;}
+  .no-print{display:none!important;}
+  .page{box-shadow:none!important;margin:0!important;border-radius:0!important;padding:20px 28px!important;}
+  .section{break-inside:avoid;}
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Malgun Gothic',Arial,sans-serif;background:#f0f4fb;padding:24px;color:#111;font-size:13px;}
+.page{background:#fff;max-width:760px;width:100%;margin:0 auto 40px;padding:36px 40px;box-shadow:0 2px 20px rgba(0,0,0,0.10);border-radius:10px;}
+
+/* 헤더 */
+.header{border-bottom:3px solid #1e3a8a;padding-bottom:14px;margin-bottom:20px;}
+.badge-row{display:flex;gap:8px;margin-bottom:8px;align-items:center;flex-wrap:wrap;}
+.badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge.info{background:#1e3a8a;color:#fff;}
+.badge.perf{background:#dc2626;color:#fff;}
+.badge.free{background:#16a34a;color:#fff;}
+.title{font-size:20px;font-weight:700;color:#1e3a8a;margin-bottom:4px;}
+.subtitle{font-size:12px;color:#6b7280;}
+.info-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
+.info-field{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;}
+.info-field .line{border:none;border-bottom:1.5px solid #93c5fd;font-size:12px;padding:2px 4px;outline:none;background:transparent;font-family:inherit;}
+
+/* 평가기준표 */
+.rubric-wrap{margin-bottom:20px;}
+.rubric-label{font-size:12px;font-weight:700;color:#1e3a8a;margin-bottom:8px;}
+.rubric-table{width:100%;border-collapse:collapse;font-size:12px;}
+.rubric-table th{background:#1e3a8a;color:#fff;padding:8px 12px;text-align:center;font-weight:700;}
+.rubric-table th.left{text-align:left;}
+.rubric-table td{padding:8px 12px;border:1px solid #e5e7eb;vertical-align:middle;line-height:1.7;}
+.rubric-table tr:nth-child(even) td{background:#f8faff;}
+.grade{font-weight:700;text-align:center;font-size:14px;}
+.grade.a{color:#16a34a;}
+.grade.b{color:#2563eb;}
+.grade.c{color:#d97706;}
+.grade.d{color:#dc2626;}
+.grade.e{color:#9ca3af;}
+.pt{text-align:center;font-weight:700;color:#1e3a8a;}
+
+/* 데이터 안내 */
+.data-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.data-box .dt{font-size:12px;font-weight:700;color:#166534;margin-bottom:10px;}
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.data-card{background:#fff;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;}
+.data-card .dc-num{font-size:10px;font-weight:700;color:#16a34a;margin-bottom:3px;}
+.data-card .dc-title{font-size:12px;font-weight:700;color:#166534;margin-bottom:4px;}
+.data-card .dc-vars{font-size:11px;color:#374151;line-height:1.8;}
+.data-card .dc-var{display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1px 6px;margin:1px;font-size:10px;color:#15803d;}
+.codap-btn{display:block;margin-top:10px;text-align:center;background:#16a34a;color:#fff;border-radius:8px;padding:7px 0;font-size:11px;font-weight:700;text-decoration:none;transition:opacity 0.15s;}
+.codap-btn:hover{opacity:0.85;}
+
+/* 조건 박스 */
+.cond-box{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#92400e;line-height:2.0;}
+.cond-box .ct{font-weight:700;color:#c2410c;margin-bottom:4px;}
+.cond-item{display:flex;align-items:flex-start;gap:6px;margin-bottom:3px;}
+.cond-num{background:#f97316;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;white-space:nowrap;margin-top:2px;flex-shrink:0;}
+
+/* 섹션 */
+.sec{border:1px solid #e5e7eb;border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+.sec.blue{border-left:4px solid #2563eb;}
+.sec.green{border-left:4px solid #16a34a;}
+.sec.purple{border-left:4px solid #7c3aed;}
+.sec.orange{border-left:4px solid #f97316;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.sec-title .circle{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;flex-shrink:0;}
+.sec-title .circle.blue{background:#2563eb;}
+.sec-title .circle.green{background:#16a34a;}
+.sec-title .circle.purple{background:#7c3aed;}
+.sec-title .circle.orange{background:#f97316;}
+.sec-title .st{color:#1e3a8a;}
+.eval-badge{font-size:10px;font-weight:700;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:8px;padding:2px 8px;white-space:nowrap;}
+.eval-badge.green{background:#f0fdf4;color:#16a34a;border-color:#bbf7d0;}
+.eval-badge.purple{background:#f5f3ff;color:#7c3aed;border-color:#ddd6fe;}
+.eval-badge.orange{background:#fff7ed;color:#f97316;border-color:#fed7aa;}
+
+/* 입력 요소 */
+.field-label{font-size:11px;font-weight:700;color:#374151;margin-bottom:4px;margin-top:10px;}
+.field-input{border:none;border-bottom:1.5px solid #93c5fd;width:100%;font-size:12px;padding:5px 2px;outline:none;background:transparent;font-family:inherit;display:block;margin-bottom:8px;}
+.field-textarea{border:1px solid #dbeafe;border-radius:8px;background:#fafcff;padding:10px 12px;width:100%;font-size:12px;font-family:inherit;outline:none;line-height:2.0;resize:none;}
+.field-textarea:focus{border-color:#2563eb;}
+.ans-line{border:none;border-bottom:1px solid #cbd5e1;width:100%;display:block;height:30px;margin-bottom:4px;}
+
+/* 링크 입력 */
+.link-wrap{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;margin:8px 0;}
+.link-wrap .lw-title{font-size:11px;font-weight:700;color:#166534;margin-bottom:5px;}
+.link-input{border:1.5px solid #86efac;border-radius:6px;padding:7px 10px;width:100%;font-size:12px;font-family:inherit;outline:none;background:#fff;margin-bottom:6px;}
+.link-input:last-child{margin-bottom:0;}
+
+/* 체크박스 */
+.check-row{display:flex;gap:16px;flex-wrap:wrap;margin:6px 0;}
+.check-item{display:flex;align-items:center;gap:5px;font-size:12px;color:#374151;}
+
+/* 점수란 */
+.score-row{display:flex;justify-content:flex-end;margin-top:16px;gap:10px;align-items:center;}
+.score-box{border:1px solid #e5e7eb;border-radius:8px;padding:6px 16px;font-size:12px;display:flex;align-items:center;gap:8px;}
+.score-box .sl{font-size:11px;color:#9ca3af;}
+.score-box input{border:none;border-bottom:1.5px solid #93c5fd;width:40px;outline:none;text-align:center;font-size:13px;font-weight:700;font-family:inherit;background:transparent;}
+
+/* 총점 */
+.total-row{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:12px;padding-top:12px;border-top:2px solid #e5e7eb;}
+.total-label{font-size:13px;font-weight:700;color:#374151;}
+.total-box{border:2px solid #1e3a8a;border-radius:8px;padding:6px 20px;font-size:15px;font-weight:700;color:#1e3a8a;min-width:70px;text-align:center;}
+
+.footer{text-align:center;font-size:11px;color:#9ca3af;margin-top:20px;padding-top:12px;border-top:1px dashed #e5e7eb;}
+.no-print{text-align:center;margin-bottom:20px;}
+.print-btn{padding:10px 28px;background:#1e3a8a;color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.print-btn:hover{background:#1e40af;}
+.hint{font-size:11px;color:#6b7280;background:#f8faff;border-radius:6px;padding:8px 12px;margin:8px 0;line-height:1.9;border-left:3px solid #bfdbfe;}
+.codap-btn{display:block;margin-top:10px;text-align:center;background:#16a34a;color:#fff;border-radius:8px;padding:7px 0;font-size:11px;font-weight:700;text-decoration:none;}
+.codap-btn:hover{background:#15803d;}
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  <button class="print-btn" onclick="window.print()">🖨️ 인쇄하기</button>
+</div>
+
+<div class="page">
+
+<!-- 헤더 -->
+<div class="header">
+  <div class="badge-row">
+    <span class="badge info">정보</span>
+    <span class="badge perf">수행평가</span>
+    <span class="badge free">자유 탐구형</span>
+  </div>
+  <div class="title">아시아 인구 데이터 자유 탐구 보고서</div>
+  <div class="subtitle">CODAP을 활용한 데이터 분석 | 총 40점</div>
+  <div class="info-row">
+    <div class="info-field">학년·반: <input class="line" type="text" placeholder="학년 반" style="width:90px"></div>
+    <div class="info-field">번호: <input class="line" type="text" placeholder="번" style="width:40px"></div>
+    <div class="info-field">이름: <input class="line" type="text" placeholder="이름" style="width:80px"></div>
+    <div class="info-field">날짜: <input class="line" type="text" placeholder="월  일" style="width:70px"></div>
+    <div class="info-field" style="margin-left:auto;">등급: <input class="line" type="text" placeholder="A~E" style="width:45px;font-weight:700;font-size:14px;"> 점수: <input class="line" type="text" placeholder="  /40" style="width:65px;font-weight:700;"></div>
+  </div>
+</div>
+
+<!-- 평가 기준표 -->
+<div class="rubric-wrap">
+  <div class="rubric-label">📋 평가 기준</div>
+  <table class="rubric-table">
+    <thead>
+      <tr>
+        <th class="left" style="width:42%;">평가 요소</th>
+        <th>충족 기준</th>
+        <th>등급</th>
+        <th>점수</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="5" style="line-height:2.0;">
+          ① 분석 주제가 창의성이 있는가?<br>
+          ② 결론에서 향후 예측이나 시사점을 명확히 제시했는가?<br>
+          ③ 그래프나 차트로 정보를 명확하게 제시했는가?<br>
+          ④ 제시된 조건에 맞게 보고서를 작성했는가?
+        </td>
+        <td style="text-align:center;">4가지 요소 모두 만족</td>
+        <td class="grade a">A</td>
+        <td class="pt">40</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">3가지 요소 만족</td>
+        <td class="grade b">B</td>
+        <td class="pt">35</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">2가지 요소 만족</td>
+        <td class="grade c">C</td>
+        <td class="pt">24</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">1가지 요소 만족</td>
+        <td class="grade d">D</td>
+        <td class="pt">16</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">미응시</td>
+        <td class="grade e">E</td>
+        <td class="pt">0</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 사용 가능한 데이터 안내 -->
+<div class="data-box">
+  <div class="dt">📂 사용 가능한 데이터 (CODAP에 업로드된 파일)</div>
+  <div class="data-grid">
+    <div class="data-card">
+      <div class="dc-num">데이터 01</div>
+      <div class="dc-title">국가별 인구수</div>
+      <div class="dc-vars">
+        <span class="dc-var">총인구</span>
+        <span class="dc-var">남성인구</span>
+        <span class="dc-var">여성인구</span>
+        <span class="dc-var">인구밀도</span>
+        <span class="dc-var">인구증가율</span>
+      </div>
+    
+      <a href="https://codap.concord.org/app/static/dg/ko/cert/index.html?dataUrl=https%3A//raw.githubusercontent.com/kimjuimg/Interdisciplinary-Learning/main/data/01_%25EA%25B5%25AD%25EA%25B0%2580%25EB%25B3%2584_%25EC%259D%25B8%25EA%25B5%25AC%25EC%2588%2598.csv" target="_blank" class="codap-btn">🔍 CODAP으로 열기</a>
+    </div>
+    <div class="data-card">
+      <div class="dc-num">데이터 02</div>
+      <div class="dc-title">국가별 기대수명</div>
+      <div class="dc-vars">
+        <span class="dc-var">기대수명(남녀)</span>
+        <span class="dc-var">기대수명(남)</span>
+        <span class="dc-var">기대수명(여)</span>
+        <span class="dc-var">합계출산율</span>
+        <span class="dc-var">중위연령</span>
+        <span class="dc-var">영아사망률</span>
+      </div>
+    
+      <a href="https://codap.concord.org/app/static/dg/ko/cert/index.html?dataUrl=https%3A//raw.githubusercontent.com/kimjuimg/Interdisciplinary-Learning/main/data/02_%25EA%25B5%25AD%25EA%25B0%2580%25EB%25B3%2584_%25EA%25B8%25B0%25EB%258C%2580%25EC%2588%2598%25EB%25AA%2585.csv" target="_blank" class="codap-btn">🔍 CODAP으로 열기</a>
+    </div>
+    <div class="data-card">
+      <div class="dc-num">데이터 03</div>
+      <div class="dc-title">국가별 인구구조</div>
+      <div class="dc-vars">
+        <span class="dc-var">유소년비율</span>
+        <span class="dc-var">생산가능비율</span>
+        <span class="dc-var">노년비율</span>
+        <span class="dc-var">고령화단계</span>
+        <span class="dc-var">중위연령</span>
+      </div>
+    
+      <a href="https://codap.concord.org/app/static/dg/ko/cert/index.html?dataUrl=https%3A//raw.githubusercontent.com/kimjuimg/Interdisciplinary-Learning/main/data/03_%25EA%25B5%25AD%25EA%25B0%2580%25EB%25B3%2584_%25EC%259D%25B8%25EA%25B5%25AC%25EA%25B5%25AC%25EC%25A1%25B0.csv" target="_blank" class="codap-btn">🔍 CODAP으로 열기</a>
+    </div>
+    <div class="data-card">
+      <div class="dc-num">데이터 04</div>
+      <div class="dc-title">연령별 인구구조 (5세 단위)</div>
+      <div class="dc-vars">
+        <span class="dc-var">0~4세</span>
+        <span class="dc-var">5~9세</span>
+        <span class="dc-var">…</span>
+        <span class="dc-var">100세 이상</span>
+        <span class="dc-var">연령별 인구수</span>
+      </div>
+    
+      <a href="https://codap.concord.org/app/static/dg/ko/cert/index.html?dataUrl=https%3A//raw.githubusercontent.com/kimjuimg/Interdisciplinary-Learning/main/data/04_%25EC%2597%25B0%25EB%25A0%25B9%25EB%25B3%2584_%25EC%259D%25B8%25EA%25B5%25AC%25EA%25B5%25AC%25EC%25A1%25B0_5%25EC%2584%25B8%25EB%258B%25A8%25EC%259C%2584_.csv" target="_blank" class="codap-btn">🔍 CODAP으로 열기</a>
+    </div>
+  </div>
+</div>
+
+<!-- 작성 조건 -->
+<div class="cond-box">
+  <div class="ct">📌 작성 조건 (④번 평가 요소)</div>
+  <div class="cond-item"><span class="cond-num">조건 1</span><span>탐구 주제는 <strong>본인이 직접</strong> 정해야 합니다.</span></div>
+  <div class="cond-item"><span class="cond-num">조건 2</span><span>CODAP 그래프를 <strong>2개 이상</strong> 제작하여 링크로 제출하세요.</span></div>
+  <div class="cond-item"><span class="cond-num">조건 3</span><span>분석 결과는 <strong>구체적인 수치(숫자)</strong>를 반드시 포함하세요.</span></div>
+  <div class="cond-item"><span class="cond-num">조건 4</span><span>결론에는 <strong>향후 예측 또는 시사점</strong>을 반드시 포함하세요.</span></div>
+  <div class="cond-item"><span class="cond-num">조건 5</span><span>각 서술 항목은 <strong>3줄 이상</strong> 작성하세요.</span></div>
+</div>
+
+<!-- STEP 1: 탐구 주제 -->
+<div class="sec blue">
+  <div class="sec-head">
+    <div class="sec-title">
+      <span class="circle blue">1</span>
+      <span class="st">탐구 주제 선정 — ① 창의성</span>
+    </div>
+    <span class="eval-badge">평가요소 ①</span>
+  </div>
+  <div class="field-label">탐구 주제</div>
+  <input class="field-input" type="text" placeholder="예) 아시아에서 기대수명이 높은 나라의 공통점은 무엇일까?">
+  <div class="field-label">사용할 데이터</div>
+  <div class="check-row">
+    <label class="check-item"><input type="checkbox"> 데이터 01 (인구수)</label>
+    <label class="check-item"><input type="checkbox"> 데이터 02 (기대수명)</label>
+    <label class="check-item"><input type="checkbox"> 데이터 03 (인구구조)</label>
+    <label class="check-item"><input type="checkbox"> 데이터 04 (연령별)</label>
+  </div>
+  <div class="field-label">분석할 변수 (x축, y축)</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:140px;">
+      <div style="font-size:11px;color:#6b7280;margin-bottom:3px;">x축 변수</div>
+      <input class="field-input" type="text" placeholder="예) 기대수명(세)">
+    </div>
+    <div style="flex:1;min-width:140px;">
+      <div style="font-size:11px;color:#6b7280;margin-bottom:3px;">y축 변수</div>
+      <input class="field-input" type="text" placeholder="예) 합계출산율(명)">
+    </div>
+  </div>
+  <div class="field-label">이 주제를 선택한 이유</div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+</div>
+
+<!-- STEP 2: 그래프 제작 -->
+<div class="sec green">
+  <div class="sec-head">
+    <div class="sec-title">
+      <span class="circle green">2</span>
+      <span class="st">그래프 제작 — ③ 그래프로 정보 제시</span>
+    </div>
+    <span class="eval-badge green">평가요소 ③</span>
+  </div>
+  <div class="hint">💡 CODAP에서 그래프를 만든 후 File → Share Document → Copy Link 순서로 링크를 복사하세요.</div>
+  <div class="link-wrap">
+    <div class="lw-title">🔗 그래프 링크 (2개 이상 필수)</div>
+    <input class="link-input" type="text" placeholder="그래프 1: https://codap.concord.org/...">
+    <input class="link-input" type="text" placeholder="그래프 2: https://codap.concord.org/...">
+    <input class="link-input" type="text" placeholder="그래프 3 (선택): https://codap.concord.org/...">
+  </div>
+  <div class="field-label">각 그래프에서 발견한 사실</div>
+  <div style="font-size:11px;color:#6b7280;margin-bottom:4px;">그래프 1에서 발견한 사실</div>
+  <input class="field-input" type="text" placeholder="예) ___ 나라의 기대수명은 ___ 세로 가장 높았다.">
+  <div style="font-size:11px;color:#6b7280;margin-bottom:4px;">그래프 2에서 발견한 사실</div>
+  <input class="field-input" type="text" placeholder="예) 기대수명이 높을수록 출산율이 ___ 하는 패턴이 보였다.">
+</div>
+
+<!-- STEP 3: 데이터 분석 -->
+<div class="sec purple">
+  <div class="sec-head">
+    <div class="sec-title">
+      <span class="circle purple">3</span>
+      <span class="st">데이터 분석 — ① 창의적 분석</span>
+    </div>
+    <span class="eval-badge purple">평가요소 ①</span>
+  </div>
+  <div class="field-label">그래프에서 발견한 패턴을 설명하고, 나만의 분석 관점으로 서술하세요.</div>
+  <div class="hint">💡 단순한 사실 나열이 아닌 <strong>자신만의 해석</strong>을 담아 쓰세요.<br>예) "기대수명이 높은 나라는 출산율이 낮다. 이는 경제가 발전할수록 자녀 양육 비용이 높아져..."</div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+</div>
+
+<!-- STEP 4: 결론 및 예측 -->
+<div class="sec orange">
+  <div class="sec-head">
+    <div class="sec-title">
+      <span class="circle orange">4</span>
+      <span class="st">결론 및 향후 예측 — ② 예측·시사점</span>
+    </div>
+    <span class="eval-badge orange">평가요소 ②</span>
+  </div>
+  <div class="field-label">탐구 결론</div>
+  <input class="field-input" type="text" placeholder="이 탐구를 통해 ___ 라는 것을 알게 됐다.">
+  <div class="field-label">향후 예측 (10년 후)</div>
+  <div class="hint">💡 "그래프에서 ___ 패턴을 발견했으므로, 10년 후에는 ___ 될 것이다."</div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="field-label">시사점 (우리 사회에 주는 의미)</div>
+  <div class="hint">💡 "따라서 우리 사회는 ___ 에 관심을 가져야 한다. 왜냐하면..."</div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+  <div class="ans-line"></div>
+</div>
+
+<!-- 총점 -->
+<div class="total-row">
+  <span class="total-label">등급</span>
+  <div class="total-box" style="min-width:50px;">　</div>
+  <span class="total-label">점수</span>
+  <div class="total-box">　　/ 40</div>
+</div>
+
+<div class="footer">
+  자료 출처: UN World Population Prospects 2024 | CODAP: codap.concord.org
+</div>
+
+</div>
+</body>
+</html>
