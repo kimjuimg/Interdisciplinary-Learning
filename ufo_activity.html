@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UFO 목격 데이터 탐구 활동지</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b3e;
+    --accent: #4f6ef7;
+    --accent2: #a259f7;
+    --accent3: #3ec9a7;
+    --accent4: #f7c948;
+    --light: #f0f2fa;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b6b8a;
+    --border: #d8daf0;
+    --shadow: 0 4px 24px rgba(13,27,62,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--light);
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: var(--primary);
+    color: white;
+    padding: 52px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '🛸';
+    position: absolute;
+    right: 40px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 130px;
+    opacity: 0.10;
+    line-height: 1;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(79,110,247,0.18);
+  }
+  /* 별 효과 */
+  .stars {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent2);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .page-header h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    position: relative; z-index: 1;
+  }
+  .page-header h1 em { color: var(--accent4); font-style: normal; }
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    position: relative; z-index: 1;
+    margin-bottom: 24px;
+  }
+  .header-chips {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    position: relative; z-index: 1;
+  }
+  .chip {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.20);
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+  }
+  .chip strong { color: var(--accent4); }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 880px; margin: 0 auto; padding: 36px 20px 64px; }
+
+  .print-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--primary); color: white; border: none;
+    border-radius: 10px; padding: 11px 22px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 600;
+    cursor: pointer; margin: 0 auto 32px; transition: opacity 0.2s;
+  }
+  .print-btn:hover { opacity: 0.82; }
+
+  /* ── CARD ── */
+  .card {
+    background: white; border-radius: 18px; padding: 32px 36px;
+    margin-bottom: 26px; box-shadow: var(--shadow);
+    border: 1px solid var(--border); position: relative;
+  }
+  .card-tag {
+    position: absolute; top: -13px; left: 26px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    padding: 4px 14px; border-radius: 20px; color: white;
+  }
+  .tag-purple { background: var(--accent2); }
+  .tag-blue   { background: var(--accent); }
+  .tag-green  { background: var(--accent3); }
+  .tag-yellow { background: #b8860b; }
+  .tag-dark   { background: var(--primary); }
+
+  .card-title {
+    font-family: 'Noto Serif KR', serif; font-size: 18px; font-weight: 700;
+    color: var(--primary); margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-title .ico {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--light); display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
+  }
+
+  /* ── DATA LINK ── */
+  .data-link-wrap {
+    background: linear-gradient(135deg, #0d1b3e 0%, #1a2a6c 100%);
+    border-radius: 14px; padding: 20px 24px;
+    display: flex; align-items: center; gap: 18px;
+    text-decoration: none; transition: all 0.2s;
+    margin: 14px 0;
+  }
+  .data-link-wrap:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,27,62,0.25); }
+  .data-link-wrap .dl-icon { font-size: 36px; flex-shrink: 0; }
+  .data-link-wrap .dl-info { display: flex; flex-direction: column; gap: 3px; }
+  .data-link-wrap .dl-num { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+  .data-link-wrap .dl-title { font-size: 15px; font-weight: 700; color: white; }
+  .data-link-wrap .dl-desc { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    background: linear-gradient(135deg, #eef0ff 0%, #f0f2fa 100%);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px; font-size: 13.5px; line-height: 1.8;
+    margin: 16px 0; color: #1a1a3e;
+  }
+  .tip-box {
+    background: #fefbf0; border: 1.5px solid var(--accent4);
+    border-radius: 10px; padding: 12px 16px;
+    font-size: 13px; line-height: 1.75; margin: 10px 0 14px; color: #5a4a00;
+  }
+  .mystery-box {
+    background: linear-gradient(135deg, #1a0a3e 0%, #0d1b3e 100%);
+    border-radius: 14px; padding: 18px 22px;
+    font-size: 13.5px; line-height: 1.8; color: rgba(255,255,255,0.85);
+    margin: 14px 0;
+  }
+  .mystery-box .mb-title {
+    font-weight: 700; color: var(--accent4); margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ── QUESTION ── */
+  .q-wrap { margin-bottom: 24px; }
+  .q-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
+  .q-badge {
+    min-width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: white;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .qb-purple { background: var(--accent2); }
+  .qb-blue   { background: var(--accent); }
+  .qb-green  { background: var(--accent3); }
+  .qb-yellow { background: #b8860b; }
+  .q-text { font-size: 14px; font-weight: 500; line-height: 1.65; padding-top: 5px; }
+
+  textarea.ans {
+    width: 100%; background: #f8f9fe;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 13px 15px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13.5px; line-height: 1.8; color: var(--text);
+    resize: vertical; outline: none; transition: border-color 0.2s;
+  }
+  textarea.ans:focus { border-color: var(--accent); }
+  textarea.ans::placeholder { color: #bbb; }
+
+  /* ── INLINE FIELDS ── */
+  .inline-fields { display: grid; gap: 10px; margin-top: 6px; }
+  .field-row { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+  .field-row label { min-width: 150px; font-weight: 600; color: var(--primary); flex-shrink: 0; }
+  .field-row input[type="text"] {
+    flex: 1; background: #f8f9fe; border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 8px 12px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 13.5px; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+  .field-row input[type="text"]:focus { border-color: var(--accent); }
+
+  /* ── STUDENT INFO ── */
+  .student-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+  .s-field { display: flex; flex-direction: column; gap: 5px; }
+  .s-field label { font-size: 11.5px; font-weight: 700; color: var(--muted); letter-spacing: 0.5px; }
+  .s-field input {
+    background: #f8f9fe; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s;
+  }
+  .s-field input:focus { border-color: var(--accent); }
+
+  /* ── STEP ── */
+  .step-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .step-badge {
+    background: var(--primary); color: white;
+    font-size: 11px; font-weight: 800; letter-spacing: 1px;
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .step-label { font-family: 'Noto Serif KR', serif; font-size: 16px; font-weight: 700; color: var(--primary); }
+
+  /* ── TOPIC CARDS ── */
+  .topic-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin: 12px 0; }
+  .topic-card { background: var(--light); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .topic-card .t-emoji { font-size: 20px; margin-bottom: 5px; display: block; }
+  .topic-card .t-title { font-weight: 700; color: var(--primary); font-size: 13.5px; margin-bottom: 3px; }
+  .topic-card .t-desc { color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+  /* ── VARIABLE TABLE ── */
+  .var-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  .var-table th { background: var(--primary); color: white; padding: 9px 12px; text-align: left; font-weight: 600; font-size: 12px; }
+  .var-table td { border: 1px solid var(--border); padding: 9px 12px; vertical-align: top; line-height: 1.6; }
+  .var-table tr:nth-child(even) td { background: #f8f9fe; }
+  .var-table .vnum { text-align: center; font-weight: 700; color: var(--accent); }
+  .var-table .vname { font-weight: 700; color: var(--primary); }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+  .checklist li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+  .checklist input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent3); cursor: pointer; flex-shrink: 0; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 22px 0; }
+
+  /* ── HIGHLIGHT ── */
+  .highlight {
+    background: linear-gradient(135deg, #0d1b3e, #1a2a6c);
+    color: white; border-radius: 12px; padding: 14px 18px;
+    font-size: 14px; font-weight: 600; margin: 14px 0;
+  }
+
+  /* ── STAT CARDS ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 14px 0; }
+  .stat-card { background: var(--light); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; text-align: center; }
+  .stat-card .s-num { font-size: 24px; font-weight: 900; color: var(--accent); }
+  .stat-card .s-label { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+  @media print {
+    .print-btn { display: none; }
+    body { background: white; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 600px) {
+    .topic-grid, .stat-grid, .student-row { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 24px; }
+    .card { padding: 24px 18px; }
+    .field-row { flex-direction: column; align-items: flex-start; }
+    .field-row label { min-width: unset; }
+    .field-row input[type="text"] { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="stars">
+    <div class="star" style="top:15%;left:10%"></div>
+    <div class="star" style="top:25%;left:30%"></div>
+    <div class="star" style="top:10%;left:55%"></div>
+    <div class="star" style="top:40%;left:70%"></div>
+    <div class="star" style="top:20%;left:85%"></div>
+    <div class="star" style="top:60%;left:20%"></div>
+    <div class="star" style="top:70%;left:45%"></div>
+    <div class="star" style="top:55%;left:60%"></div>
+    <div class="star" style="top:80%;left:75%"></div>
+    <div class="star" style="top:35%;left:92%"></div>
+  </div>
+  <div class="header-badge">🛸 데이터 탐구 활동지</div>
+  <h1>UFO 목격 데이터로<br><em>패턴을 찾아라!</em></h1>
+  <p class="header-sub">CODAP 데이터 분석 도구 활용 | 정보·사회 융합 수업</p>
+  <div class="header-chips">
+    <div class="chip">📅 <strong>차시:</strong> 2차시 (60분 × 2)</div>
+    <div class="chip">🛠 <strong>도구:</strong> CODAP</div>
+    <div class="chip">📊 <strong>데이터:</strong> 미국 UFO 목격 기록 27,000+건</div>
+    <div class="chip">👥 <strong>모둠:</strong> 2~3명</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <button class="print-btn" onclick="window.print()">🖨️ 인쇄하기</button>
+
+  <!-- 학생 정보 -->
+  <div class="card">
+    <div class="card-tag tag-dark">학생 정보</div>
+    <div class="student-row" style="margin-top:10px">
+      <div class="s-field">
+        <label>학년 · 반</label>
+        <input type="text" id="s-class" placeholder="예) 1학년 3반">
+      </div>
+      <div class="s-field">
+        <label>번호 · 이름</label>
+        <input type="text" id="s-name" placeholder="예) 15번 홍길동">
+      </div>
+    </div>
+  </div>
+
+  <!-- 배경 지식 -->
+  <div class="card">
+    <div class="card-tag tag-purple">도입</div>
+    <div class="card-title"><span class="ico">🌌</span>UFO란 무엇일까요?</div>
+
+    <div class="mystery-box">
+      <div class="mb-title">🛸 알고 계셨나요?</div>
+      UFO(Unidentified Flying Object)는 <strong>미확인 비행 물체</strong>를 말해요.<br>
+      미국에서만 수십만 건의 목격 신고가 접수되었고, 미 국방부도 공식 조사를 진행했어요.<br>
+      오늘 우리는 실제 미국 UFO 목격 데이터를 분석해 <strong>어떤 패턴이 있는지</strong> 탐구해볼 거예요!
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="s-num">27,603</div>
+        <div class="s-label">총 목격 기록 수<br>(1990~2005년)</div>
+      </div>
+      <div class="stat-card">
+        <div class="s-num">27</div>
+        <div class="s-label">UFO 형태 종류<br>(LIGHT, DISK 등)</div>
+      </div>
+      <div class="stat-card">
+        <div class="s-num">50</div>
+        <div class="s-label">미국 전 주(州)에서<br>목격 기록 있음</div>
+      </div>
+    </div>
+
+    <div class="q-wrap" style="margin-top:18px">
+      <div class="q-head">
+        <div class="q-badge qb-purple">Q1</div>
+        <div class="q-text">UFO 목격 데이터를 분석하면 어떤 것들을 알 수 있을까요? <strong>기대되는 것</strong>을 자유롭게 적어보세요.</div>
+      </div>
+      <textarea class="ans" id="q1" rows="3" placeholder="예) 어느 계절에 UFO가 많이 목격되는지, 어떤 형태가 가장 많은지 알 수 있을 것 같다..."></textarea>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-purple">Q2</div>
+        <div class="q-text">UFO 목격 데이터에 영향을 미칠 수 있는 요인에는 어떤 것들이 있을까요? (과학적·사회적 관점 모두 OK)</div>
+      </div>
+      <textarea class="ans" id="q2" rows="3" placeholder="예) 날씨, 인구밀도, 항공기 항로, 미디어의 영향, 특정 지역의 군사시설..."></textarea>
+    </div>
+  </div>
+
+  <!-- 데이터 열기 -->
+  <div class="card">
+    <div class="card-tag tag-blue">데이터 접속</div>
+    <div class="card-title"><span class="ico">🔗</span>CODAP 데이터 열기</div>
+
+    <div class="info-box">
+      아래 버튼을 클릭하면 UFO 목격 데이터가 CODAP에서 열립니다.<br>
+      <strong>1차시</strong>에는 기본 탐색을, <strong>2차시</strong>에는 탐구 질문을 정해 깊이 분석해요.
+    </div>
+
+    <a class="data-link-wrap" href="https://codap.concord.org/app/static/dg/ko/cert/index.html" target="_blank" id="codap-link">
+      <div class="dl-icon">🛸</div>
+      <div class="dl-info">
+        <span class="dl-num">DATA · UFO SIGHTINGS</span>
+        <span class="dl-title">미국 UFO 목격 기록 (1990~2005)</span>
+        <span class="dl-desc">27,603건 · 도시·주·형태·색상·연도·월·시간대</span>
+      </div>
+    </a>
+
+    <div class="tip-box">
+      💡 <strong>데이터 업로드 방법:</strong> CODAP 열기 → 상단 메뉴 [불러오기] → [로컬 파일] → <code>ufo_codap.csv</code> 선택<br>
+      또는 선생님이 공유해주신 CODAP 링크를 클릭하세요!
+    </div>
+
+    <div class="tip-box">
+      💡 <strong>CODAP 기본 조작:</strong> 그래프 아이콘 클릭 → 변수를 x축/y축으로 끌어다 놓기 → 점이나 막대를 클릭하면 해당 데이터가 표에서 강조!
+    </div>
+  </div>
+
+  <!-- 1차시 -->
+  <div class="card">
+    <div class="card-tag tag-blue">1차시</div>
+    <div class="step-row">
+      <span class="step-badge">STEP 1</span>
+      <span class="step-label">데이터 구조 파악하기</span>
+    </div>
+
+    <div class="info-box">
+      📂 데이터를 열면 <strong>7개 변수</strong>가 있어요. 각 행(row)이 UFO 목격 1건이에요.<br>
+      표를 스크롤하며 변수 이름을 확인하고, 아래 변수 정의표를 참고하세요.
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-blue">Q3</div>
+        <div class="q-text">데이터 표를 살펴보며 <strong>흥미롭거나 특이한 기록</strong>을 찾아 적어보세요.</div>
+      </div>
+      <textarea class="ans" id="q3" rows="3" placeholder="예) 새벽 3시에 목격된 TRIANGLE 형태의 UFO가 캘리포니아에서 발견됐다..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="step-row">
+      <span class="step-badge">STEP 2</span>
+      <span class="step-label">형태(Shape) 데이터 탐구</span>
+    </div>
+
+    <div class="info-box">
+      <strong>Shape(형태)</strong>를 x축으로 끌어다 놓아 막대 그래프를 만들어보세요.<br>
+      탐구 질문: <strong>"가장 많이 목격된 UFO 형태는 무엇일까요?"</strong>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-blue">Q4</div>
+        <div class="q-text">가장 많이 목격된 UFO 형태 <strong>상위 3가지</strong>를 적고, 왜 이 형태가 많을지 생각해보세요.</div>
+      </div>
+      <div class="inline-fields">
+        <div class="field-row">
+          <label>1위 형태</label>
+          <input type="text" id="q4_1" placeholder="형태 이름">
+        </div>
+        <div class="field-row">
+          <label>2위 형태</label>
+          <input type="text" id="q4_2" placeholder="형태 이름">
+        </div>
+        <div class="field-row">
+          <label>3위 형태</label>
+          <input type="text" id="q4_3" placeholder="형태 이름">
+        </div>
+      </div>
+      <textarea class="ans" id="q4_reason" rows="2" placeholder="이 형태들이 많은 이유를 생각해보세요..." style="margin-top:10px"></textarea>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-blue">Q5</div>
+        <div class="q-text"><strong>목격이 가장 많은 주(State)</strong>는 어디인가요? 그 이유가 무엇일지 추측해보세요.</div>
+      </div>
+      <div class="inline-fields">
+        <div class="field-row">
+          <label>가장 많은 주</label>
+          <input type="text" id="q5_state" placeholder="주 이름 (예: CA)">
+        </div>
+        <div class="field-row">
+          <label>목격 건수</label>
+          <input type="text" id="q5_count" placeholder="약 몇 건">
+        </div>
+      </div>
+      <textarea class="ans" id="q5_reason" rows="2" placeholder="이 주에서 특히 많은 이유는 무엇일까요?" style="margin-top:10px"></textarea>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-blue">Q6</div>
+        <div class="q-text"><strong>어느 시간대(Hour)</strong>에 UFO 목격이 가장 많고, 가장 적나요? 그 이유를 설명해보세요.</div>
+      </div>
+      <div class="inline-fields">
+        <div class="field-row">
+          <label>가장 많은 시간대</label>
+          <input type="text" id="q6_max" placeholder="예) 21시 (밤 9시)">
+        </div>
+        <div class="field-row">
+          <label>가장 적은 시간대</label>
+          <input type="text" id="q6_min" placeholder="예) 8시 (아침 8시)">
+        </div>
+      </div>
+      <textarea class="ans" id="q6_reason" rows="2" placeholder="시간대별 차이가 나는 이유를 설명해보세요..." style="margin-top:10px"></textarea>
+    </div>
+  </div>
+
+  <!-- 2차시 -->
+  <div class="card">
+    <div class="card-tag tag-yellow">2차시</div>
+    <div class="step-row">
+      <span class="step-badge">STEP 3</span>
+      <span class="step-label">연도별 변화 탐구</span>
+    </div>
+
+    <div class="highlight">📂 Year(연도)를 x축으로 끌어다 놓아 목격 건수 변화를 확인해보세요!</div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-yellow">Q7</div>
+        <div class="q-text">연도별 UFO 목격 건수 그래프에서 <strong>뚜렷한 변화</strong>가 있나요? 언제부터 급증했나요?</div>
+      </div>
+      <div class="inline-fields">
+        <div class="field-row">
+          <label>급증 시작 연도</label>
+          <input type="text" id="q7_year" placeholder="예) 1995년">
+        </div>
+      </div>
+      <textarea class="ans" id="q7_reason" rows="3" placeholder="이 시기에 UFO 목격 신고가 급증한 이유는 무엇일까요? (인터넷, 미디어, 문화 등과 연결해 생각해보세요)" style="margin-top:10px"></textarea>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-yellow">Q8</div>
+        <div class="q-text"><strong>월(Month)</strong>별로 목격 건수가 다른가요? 특정 계절에 더 많이 목격되나요?</div>
+      </div>
+      <div class="inline-fields">
+        <div class="field-row">
+          <label>목격 가장 많은 월</label>
+          <input type="text" id="q8_max" placeholder="예) 6월 (여름)">
+        </div>
+        <div class="field-row">
+          <label>목격 가장 적은 월</label>
+          <input type="text" id="q8_min" placeholder="예) 2월 (겨울)">
+        </div>
+      </div>
+      <textarea class="ans" id="q8_reason" rows="2" placeholder="계절별 차이가 나는 이유는 무엇일까요?" style="margin-top:10px"></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="step-row">
+      <span class="step-badge">STEP 4</span>
+      <span class="step-label">내 탐구 질문 만들기</span>
+    </div>
+
+    <div class="topic-grid">
+      <div class="topic-card">
+        <span class="t-emoji">🌙</span>
+        <div class="t-title">시간과 형태의 관계</div>
+        <div class="t-desc">밤에는 어떤 형태가 더 많이 목격될까?</div>
+      </div>
+      <div class="topic-card">
+        <span class="t-emoji">📅</span>
+        <div class="t-title">연도와 형태의 변화</div>
+        <div class="t-desc">시대에 따라 UFO 형태 보고가 달라졌을까?</div>
+      </div>
+      <div class="topic-card">
+        <span class="t-emoji">🗺️</span>
+        <div class="t-title">지역별 특성</div>
+        <div class="t-desc">특정 주에서 유독 많이 보이는 형태가 있을까?</div>
+      </div>
+      <div class="topic-card">
+        <span class="t-emoji">🎨</span>
+        <div class="t-title">색상과 형태</div>
+        <div class="t-desc">특정 형태의 UFO는 특정 색으로 보고될까?</div>
+      </div>
+    </div>
+
+    <div class="q-wrap" style="margin-top:16px">
+      <div class="q-head">
+        <div class="q-badge qb-yellow">Q9</div>
+        <div class="q-text">위 예시나 데이터를 참고해 <strong>내 탐구 질문</strong>을 만들어보세요. 최소 두 변수의 관계여야 해요!</div>
+      </div>
+      <textarea class="ans" id="q9" rows="2" placeholder="나의 탐구 질문: "></textarea>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-yellow">Q10</div>
+        <div class="q-text">탐구 질문에 답하기 위해 그래프를 만들고 <strong>발견한 패턴</strong>을 구체적으로 서술하세요.</div>
+      </div>
+      <div class="tip-box">
+        💡 그래프 중앙에 변수를 끌어다 놓으면 색상으로 구분할 수 있어요! 여러 그래프를 만들어보세요.
+      </div>
+      <textarea class="ans" id="q10" rows="5" placeholder="탐구 과정과 발견한 내용을 구체적으로 적어보세요...&#10;예) Shape(형태)를 x축, Hour(시간)를 y축으로 놓았더니..."></textarea>
+    </div>
+  </div>
+
+  <!-- 마무리 -->
+  <div class="card">
+    <div class="card-tag tag-green">마무리</div>
+    <div class="card-title"><span class="ico">💬</span>성찰 & 비판적 사고</div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-green">Q11</div>
+        <div class="q-text">UFO 목격 데이터에서 발견한 패턴이 <strong>실제로 UFO가 존재한다는 증거</strong>가 될 수 있을까요? 데이터의 한계를 생각해보세요.</div>
+      </div>
+      <textarea class="ans" id="q11" rows="4" placeholder="데이터로 알 수 있는 것과 알 수 없는 것은 무엇인지 생각해보세요...&#10;예) 이 데이터는 '목격 신고' 기록이지, 실제 존재 여부가 아니다..."></textarea>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-green">Q12</div>
+        <div class="q-text">이번 탐구에서 <strong>가장 흥미로웠던 발견</strong>은 무엇인가요?</div>
+      </div>
+      <textarea class="ans" id="q12" rows="3" placeholder="가장 놀랍거나 흥미로웠던 점..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px;">✅ 제출 전 자기 점검</p>
+    <ul class="checklist">
+      <li><input type="checkbox"> CODAP에서 데이터를 열고 직접 그래프를 만들었다.</li>
+      <li><input type="checkbox"> UFO 형태, 주, 시간대 데이터를 분석했다.</li>
+      <li><input type="checkbox"> 연도별·월별 변화 패턴을 확인했다.</li>
+      <li><input type="checkbox"> 내 탐구 질문을 만들고 답을 찾았다.</li>
+      <li><input type="checkbox"> 데이터의 한계에 대해 비판적으로 생각했다.</li>
+      <li><input type="checkbox"> 모든 문항을 성실하게 작성했다.</li>
+    </ul>
+  </div>
+
+  <!-- 변수 정의표 -->
+  <div class="card">
+    <div class="card-tag tag-dark">참고자료</div>
+    <div class="card-title"><span class="ico">📋</span>변수 정의표 (Variables & Definitions)</div>
+    <table class="var-table">
+      <thead>
+        <tr>
+          <th style="width:5%">#</th>
+          <th style="width:20%">변수명</th>
+          <th>설명</th>
+          <th style="width:15%">값 예시</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vnum">1</td>
+          <td class="vname">City</td>
+          <td>목격된 도시 이름</td>
+          <td>Seattle, Denver</td>
+        </tr>
+        <tr>
+          <td class="vnum">2</td>
+          <td class="vname">State</td>
+          <td>목격된 미국 주(州) 약자</td>
+          <td>CA, TX, NY</td>
+        </tr>
+        <tr>
+          <td class="vnum">3</td>
+          <td class="vname">Shape</td>
+          <td>목격된 UFO 형태</td>
+          <td>LIGHT, TRIANGLE, DISK, CIRCLE, FIREBALL 등</td>
+        </tr>
+        <tr>
+          <td class="vnum">4</td>
+          <td class="vname">Color</td>
+          <td>목격된 UFO 색상 (미보고 시 UNKNOWN)</td>
+          <td>RED, ORANGE, GREEN, BLUE 등</td>
+        </tr>
+        <tr>
+          <td class="vnum">5</td>
+          <td class="vname">Year</td>
+          <td>목격 연도</td>
+          <td>1990 ~ 2005</td>
+        </tr>
+        <tr>
+          <td class="vnum">6</td>
+          <td class="vname">Month</td>
+          <td>목격 월 (1=1월, 12=12월)</td>
+          <td>1 ~ 12</td>
+        </tr>
+        <tr>
+          <td class="vnum">7</td>
+          <td class="vname">Hour</td>
+          <td>목격 시간 (24시간 기준, 0=자정)</td>
+          <td>0 ~ 23</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:18px">
+      <p style="font-size:13px; font-weight:700; color:var(--primary); margin-bottom:10px;">🛸 UFO 형태 종류 설명</p>
+      <table class="var-table">
+        <thead>
+          <tr><th>형태명</th><th>설명</th><th>형태명</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="vname">LIGHT</td><td>빛/발광체</td><td class="vname">TRIANGLE</td><td>삼각형</td></tr>
+          <tr><td class="vname">DISK</td><td>원반형</td><td class="vname">CIRCLE</td><td>원형</td></tr>
+          <tr><td class="vname">FIREBALL</td><td>불덩어리</td><td class="vname">SPHERE</td><td>구형</td></tr>
+          <tr><td class="vname">CIGAR</td><td>시가(담배)형</td><td class="vname">OVAL</td><td>타원형</td></tr>
+          <tr><td class="vname">FORMATION</td><td>편대(여러 개)</td><td class="vname">CYLINDER</td><td>원통형</td></tr>
+          <tr><td class="vname">DIAMOND</td><td>다이아몬드형</td><td class="vname">CHEVRON</td><td>V자형</td></tr>
+          <tr><td class="vname">FLASH</td><td>섬광</td><td class="vname">EGG</td><td>달걀형</td></tr>
+          <tr><td class="vname">TEARDROP</td><td>물방울형</td><td class="vname">OTHER</td><td>기타</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">📌 데이터 출처: National UFO Reporting Center (NUFORC) via Kaggle</p>
+  </div>
+
+
+  <!-- Firebase 제출 -->
+  <div class="card" style="border: 2px solid var(--accent2); background: #0d0a1e;">
+    <div class="card-tag tag-purple">제출</div>
+    <div class="card-title" style="margin-top:8px; color:white;"><span class="ico">🛸</span><span style="color:white">Firebase로 제출하기</span></div>
+    <p style="font-size:13.5px; color:rgba(255,255,255,0.65); margin-bottom:18px;">위에 작성한 내용을 선생님 데이터베이스로 전송합니다. 모든 문항을 작성한 후 제출하세요.</p>
+
+    <div id="submit-notice" style="display:none; background:rgba(62,201,167,0.15); border:1.5px solid var(--accent3); border-radius:10px; padding:14px 18px; font-size:13.5px; color:var(--accent3); margin-bottom:16px;">
+      ✅ 제출 완료! 선생님 데이터베이스에 저장되었습니다.
+    </div>
+    <div id="submit-error" style="display:none; background:rgba(247,80,80,0.15); border:1.5px solid #f75050; border-radius:10px; padding:14px 18px; font-size:13.5px; color:#f75050; margin-bottom:16px;">
+      ❌ 제출 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도하세요.
+    </div>
+
+    <button onclick="submitToFirebase()" id="submit-btn" style="
+      display:flex; align-items:center; gap:10px;
+      background: linear-gradient(135deg, #4f6ef7, #a259f7);
+      color:white; border:none; border-radius:12px; padding:14px 32px;
+      font-family:'Noto Sans KR',sans-serif; font-size:15px; font-weight:700;
+      cursor:pointer; margin:0 auto; width:100%; justify-content:center;
+      transition: opacity 0.2s;
+    " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+      🛸 제출하기
+    </button>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCWEfUwzlUAimWVb7vw67fGa1Bpjkn6uQI",
+    authDomain: "ufo--activity.firebaseapp.com",
+    databaseURL: "https://ufo--activity-default-rtdb.firebaseio.com",
+    projectId: "ufo--activity",
+    storageBucket: "ufo--activity.firebasestorage.app",
+    messagingSenderId: "155095383734",
+    appId: "1:155095383734:web:5196e92973d27a27653017"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  window.submitToFirebase = async function() {
+    const btn = document.getElementById('submit-btn');
+    const noticeEl = document.getElementById('submit-notice');
+    const errorEl = document.getElementById('submit-error');
+
+    // 학번·이름 필수 체크
+    const sClass = document.getElementById('s-class')?.value?.trim();
+    const sName  = document.getElementById('s-name')?.value?.trim();
+    if (!sClass || !sName) {
+      errorEl.textContent = '❌ 학년·반과 이름을 먼저 입력해주세요!';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    btn.textContent = '⏳ 제출 중...';
+    btn.disabled = true;
+
+    const data = {
+      제출시각: new Date().toLocaleString('ko-KR'),
+      학년반:   sClass,
+      이름:     sName,
+      Q1_기대:          document.getElementById('q1')?.value || '',
+      Q2_영향요인:       document.getElementById('q2')?.value || '',
+      Q3_특이기록:       document.getElementById('q3')?.value || '',
+      Q4_1위형태:        document.getElementById('q4_1')?.value || '',
+      Q4_2위형태:        document.getElementById('q4_2')?.value || '',
+      Q4_3위형태:        document.getElementById('q4_3')?.value || '',
+      Q4_이유:          document.getElementById('q4_reason')?.value || '',
+      Q5_주이름:         document.getElementById('q5_state')?.value || '',
+      Q5_건수:           document.getElementById('q5_count')?.value || '',
+      Q5_이유:           document.getElementById('q5_reason')?.value || '',
+      Q6_많은시간:        document.getElementById('q6_max')?.value || '',
+      Q6_적은시간:        document.getElementById('q6_min')?.value || '',
+      Q6_이유:           document.getElementById('q6_reason')?.value || '',
+      Q7_급증연도:        document.getElementById('q7_year')?.value || '',
+      Q7_이유:           document.getElementById('q7_reason')?.value || '',
+      Q8_많은월:         document.getElementById('q8_max')?.value || '',
+      Q8_적은월:         document.getElementById('q8_min')?.value || '',
+      Q8_이유:           document.getElementById('q8_reason')?.value || '',
+      Q9_탐구질문:        document.getElementById('q9')?.value || '',
+      Q10_탐구결과:       document.getElementById('q10')?.value || '',
+      Q11_비판적사고:     document.getElementById('q11')?.value || '',
+      Q12_흥미발견:       document.getElementById('q12')?.value || '',
+    };
+
+    try {
+      await push(ref(db, 'ufo_submissions'), data);
+      noticeEl.style.display = 'block';
+      errorEl.style.display = 'none';
+      btn.textContent = '✅ 제출 완료';
+      btn.style.background = '#3ec9a7';
+    } catch(err) {
+      console.error(err);
+      errorEl.textContent = '❌ 오류: ' + err.message;
+      errorEl.style.display = 'block';
+      btn.textContent = '🛸 제출하기';
+      btn.disabled = false;
+    }
+  };
+</script>
+</body>
+</html>
