@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UFO 탐구 활동 — 교사용 대시보드</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b3e;
+    --accent: #4f6ef7;
+    --accent2: #a259f7;
+    --accent3: #3ec9a7;
+    --accent4: #f7c948;
+    --danger: #ef4444;
+    --light: #f0f2fa;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b6b8a;
+    --border: #d8daf0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--light); color: var(--text); }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--primary);
+    color: white;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-left h1 { font-size: 18px; font-weight: 700; }
+  .header-left span { font-size: 12px; color: rgba(255,255,255,0.55); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(62,201,167,0.2); border: 1px solid var(--accent3);
+    border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--accent3);
+    font-weight: 600;
+  }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent3);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+  .refresh-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: white; border-radius: 8px; padding: 6px 14px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .refresh-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── MAIN ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+
+  /* ── STAT CARDS ── */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-card {
+    background: white; border-radius: 14px; padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border);
+  }
+  .stat-card .s-label { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; font-weight: 600; letter-spacing: 0.3px; }
+  .stat-card .s-num { font-size: 32px; font-weight: 900; }
+  .stat-card .s-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .c1 .s-num { color: var(--accent); }
+  .c2 .s-num { color: var(--accent3); }
+  .c3 .s-num { color: var(--accent4); }
+  .c4 .s-num { color: var(--accent2); }
+
+  /* ── TABLE SECTION ── */
+  .section-title {
+    font-size: 15px; font-weight: 700; color: var(--primary);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .table-wrap {
+    background: white; border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border);
+    overflow: hidden; margin-bottom: 24px;
+  }
+  .table-toolbar {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1; min-width: 200px;
+    background: var(--light); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 8px 14px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 13px;
+    color: var(--text); outline: none;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .export-btn {
+    background: var(--accent3); color: white; border: none;
+    border-radius: 8px; padding: 8px 16px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 12.5px; font-weight: 600;
+    cursor: pointer; transition: opacity 0.2s; white-space: nowrap;
+  }
+  .export-btn:hover { opacity: 0.85; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: var(--primary); color: white;
+    padding: 11px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  thead th:first-child { border-radius: 0; }
+  tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f0f4ff; }
+  tbody td { padding: 11px 14px; font-size: 13px; vertical-align: middle; }
+  .td-num { color: var(--muted); font-size: 12px; }
+  .td-name { font-weight: 700; color: var(--primary); }
+  .td-class { color: var(--muted); font-size: 12px; }
+  .td-time { color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+  .td-preview { color: var(--text); font-size: 12px; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .view-btn {
+    background: var(--light); border: 1px solid var(--border);
+    color: var(--accent); border-radius: 6px; padding: 4px 10px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 11.5px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .view-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center; padding: 48px 20px;
+    color: var(--muted); font-size: 14px;
+  }
+  .empty .e-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 200;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: 18px;
+    width: 100%; max-width: 680px; max-height: 88vh;
+    overflow-y: auto; box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+  }
+  .modal-header {
+    position: sticky; top: 0; background: white;
+    padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 10;
+  }
+  .modal-header h2 { font-size: 16px; font-weight: 700; color: var(--primary); }
+  .modal-header .close-btn {
+    background: var(--light); border: none; border-radius: 8px;
+    width: 32px; height: 32px; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); transition: background 0.15s;
+  }
+  .modal-header .close-btn:hover { background: #e0e0e0; }
+  .modal-body { padding: 20px 24px; }
+  .modal-meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    background: var(--light); border-radius: 10px; padding: 12px 16px;
+    margin-bottom: 20px; font-size: 13px;
+  }
+  .modal-meta span { color: var(--muted); }
+  .modal-meta strong { color: var(--primary); }
+  .q-item { margin-bottom: 18px; }
+  .q-item .q-num {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .q-item .q-label { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+  .q-item .q-ans {
+    background: var(--light); border-radius: 8px; padding: 10px 14px;
+    font-size: 13px; line-height: 1.7; color: var(--text);
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .q-item .q-ans.empty-ans { color: var(--muted); font-style: italic; }
+
+  /* ── LOADING ── */
+  .loading {
+    text-align: center; padding: 48px;
+    color: var(--muted); font-size: 14px;
+  }
+  .spinner {
+    width: 36px; height: 36px; border: 3px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 768px) {
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .header { padding: 14px 16px; }
+    .container { padding: 16px; }
+    thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <span style="font-size:24px">🛸</span>
+    <div>
+      <h1>UFO 탐구 활동 — 교사용 대시보드</h1>
+      <span>Firebase Realtime Database 연동</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div>실시간 연동</div>
+    <button class="refresh-btn" onclick="loadData()">🔄 새로고침</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- 통계 카드 -->
+  <div class="stat-row">
+    <div class="stat-card c1">
+      <div class="s-label">총 제출 수</div>
+      <div class="s-num" id="total-count">-</div>
+      <div class="s-sub">전체 학생 제출</div>
+    </div>
+    <div class="stat-card c2">
+      <div class="s-label">오늘 제출</div>
+      <div class="s-num" id="today-count">-</div>
+      <div class="s-sub" id="today-date">-</div>
+    </div>
+    <div class="stat-card c3">
+      <div class="s-label">마지막 제출</div>
+      <div class="s-num" style="font-size:16px; padding-top:6px" id="last-time">-</div>
+      <div class="s-sub">가장 최근 제출 시각</div>
+    </div>
+    <div class="stat-card c4">
+      <div class="s-label">탐구 질문 작성률</div>
+      <div class="s-num" id="q9-rate">-</div>
+      <div class="s-sub">Q9 탐구질문 작성한 학생</div>
+    </div>
+  </div>
+
+  <!-- 학생 답변 테이블 -->
+  <div class="section-title">📋 학생 답변 목록</div>
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input class="search-input" type="text" id="search-input" placeholder="🔍 이름 또는 학년·반으로 검색..." oninput="filterTable()">
+      <button class="export-btn" onclick="exportCSV()">📥 CSV 내보내기</button>
+    </div>
+    <div id="table-container">
+      <div class="loading"><div class="spinner"></div>데이터 불러오는 중...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 상세 모달 -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">학생 답변 상세</h2>
+      <button class="close-btn" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCWEfUwzlUAimWVb7vw67fGa1Bpjkn6uQI",
+    authDomain: "ufo--activity.firebaseapp.com",
+    databaseURL: "https://ufo--activity-default-rtdb.firebaseio.com",
+    projectId: "ufo--activity",
+    storageBucket: "ufo--activity.firebasestorage.app",
+    messagingSenderId: "155095383734",
+    appId: "1:155095383734:web:5196e92973d27a27653017"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let allData = [];
+
+  const QUESTIONS = [
+    { key: 'Q1_기대',       label: 'Q1. UFO 데이터에서 기대되는 것' },
+    { key: 'Q2_영향요인',    label: 'Q2. UFO 목격에 영향을 미치는 요인' },
+    { key: 'Q3_특이기록',    label: 'Q3. 흥미롭거나 특이한 기록' },
+    { key: 'Q4_1위형태',     label: 'Q4. 가장 많은 형태 1위' },
+    { key: 'Q4_2위형태',     label: 'Q4. 가장 많은 형태 2위' },
+    { key: 'Q4_3위형태',     label: 'Q4. 가장 많은 형태 3위' },
+    { key: 'Q4_이유',        label: 'Q4. 형태가 많은 이유' },
+    { key: 'Q5_주이름',      label: 'Q5. 목격 가장 많은 주' },
+    { key: 'Q5_건수',        label: 'Q5. 목격 건수' },
+    { key: 'Q5_이유',        label: 'Q5. 많은 이유' },
+    { key: 'Q6_많은시간',    label: 'Q6. 목격 가장 많은 시간대' },
+    { key: 'Q6_적은시간',    label: 'Q6. 목격 가장 적은 시간대' },
+    { key: 'Q6_이유',        label: 'Q6. 시간대 차이 이유' },
+    { key: 'Q7_급증연도',    label: 'Q7. 급증 시작 연도' },
+    { key: 'Q7_이유',        label: 'Q7. 급증 이유' },
+    { key: 'Q8_많은월',      label: 'Q8. 목격 가장 많은 월' },
+    { key: 'Q8_적은월',      label: 'Q8. 목격 가장 적은 월' },
+    { key: 'Q8_이유',        label: 'Q8. 계절 차이 이유' },
+    { key: 'Q9_탐구질문',    label: 'Q9. 내 탐구 질문' },
+    { key: 'Q10_탐구결과',   label: 'Q10. 탐구 결과' },
+    { key: 'Q11_비판적사고', label: 'Q11. 데이터의 한계 (비판적 사고)' },
+    { key: 'Q12_흥미발견',   label: 'Q12. 가장 흥미로웠던 발견' },
+  ];
+
+  function renderTable(data) {
+    const container = document.getElementById('table-container');
+    if (!data.length) {
+      container.innerHTML = `<div class="empty"><div class="e-icon">🛸</div>아직 제출된 답변이 없어요.<br>학생들이 활동지를 제출하면 여기에 나타납니다.</div>`;
+      return;
+    }
+
+    const rows = data.map((item, i) => `
+      <tr onclick="showDetail('${item._key}')">
+        <td class="td-num">${i + 1}</td>
+        <td class="td-name">${item.이름 || '-'}</td>
+        <td class="td-class">${item.학년반 || '-'}</td>
+        <td class="td-time">${item.제출시각 || '-'}</td>
+        <td class="td-preview">${item.Q9_탐구질문 || '(미작성)'}</td>
+        <td><button class="view-btn" onclick="event.stopPropagation(); showDetail('${item._key}')">상세보기</button></td>
+      </tr>
+    `).join('');
+
+    container.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th style="width:48px">#</th>
+            <th>이름</th>
+            <th>학년·반</th>
+            <th>제출 시각</th>
+            <th>탐구 질문 (Q9)</th>
+            <th style="width:80px"></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  function updateStats(data) {
+    document.getElementById('total-count').textContent = data.length;
+
+    const today = new Date().toLocaleDateString('ko-KR');
+    document.getElementById('today-date').textContent = today;
+    const todayCount = data.filter(d => d.제출시각 && d.제출시각.startsWith(today.replace(/\. /g, '. ').slice(0,6))).length;
+    document.getElementById('today-count').textContent = data.filter(d => {
+      if (!d.제출시각) return false;
+      const t = new Date().toLocaleDateString('ko-KR', {year:'numeric', month:'numeric', day:'numeric'});
+      return d.제출시각.includes(t.replace('. ', '.').slice(0,8));
+    }).length || data.length > 0 ? data.length : 0;
+
+    if (data.length > 0) {
+      document.getElementById('last-time').textContent = data[data.length-1].제출시각?.split(' ')[1]?.slice(0,5) || '-';
+    }
+
+    const q9Count = data.filter(d => d.Q9_탐구질문 && d.Q9_탐구질문.trim()).length;
+    document.getElementById('q9-rate').textContent = data.length > 0 ? Math.round(q9Count/data.length*100) + '%' : '-';
+    document.getElementById('today-count').textContent = data.length;
+  }
+
+  window.loadData = function() {
+    const dbRef = ref(db, 'ufo_submissions');
+    onValue(dbRef, (snapshot) => {
+      const val = snapshot.val();
+      if (!val) {
+        allData = [];
+      } else {
+        allData = Object.entries(val).map(([key, v]) => ({ _key: key, ...v }));
+        allData.sort((a, b) => (a.제출시각 || '').localeCompare(b.제출시각 || ''));
+      }
+      updateStats(allData);
+      renderTable(allData);
+    });
+  };
+
+  window.filterTable = function() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const filtered = allData.filter(d =>
+      (d.이름 || '').toLowerCase().includes(q) ||
+      (d.학년반 || '').toLowerCase().includes(q)
+    );
+    renderTable(filtered);
+  };
+
+  window.showDetail = function(key) {
+    const item = allData.find(d => d._key === key);
+    if (!item) return;
+
+    document.getElementById('modal-title').textContent = `${item.이름 || '?'} — ${item.학년반 || '?'}`;
+
+    const qHtml = QUESTIONS.map(q => {
+      const ans = item[q.key] || '';
+      return `
+        <div class="q-item">
+          <div class="q-num">${q.key.split('_')[0]}</div>
+          <div class="q-label">${q.label}</div>
+          <div class="q-ans ${!ans ? 'empty-ans' : ''}">${ans || '(미작성)'}</div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-meta">
+        <div><span>이름</span> <strong>${item.이름 || '-'}</strong></div>
+        <div><span>학년·반</span> <strong>${item.학년반 || '-'}</strong></div>
+        <div><span>제출 시각</span> <strong>${item.제출시각 || '-'}</strong></div>
+      </div>
+      ${qHtml}
+    `;
+    document.getElementById('modal').classList.add('open');
+  };
+
+  window.closeModal = function(e) {
+    if (e.target.id === 'modal') document.getElementById('modal').classList.remove('open');
+  };
+  window.closeModalDirect = function() {
+    document.getElementById('modal').classList.remove('open');
+  };
+
+  window.exportCSV = function() {
+    if (!allData.length) { alert('내보낼 데이터가 없어요!'); return; }
+
+    const headers = ['#','이름','학년반','제출시각', ...QUESTIONS.map(q => q.label)];
+    const rows = allData.map((item, i) => [
+      i+1, item.이름||'', item.학년반||'', item.제출시각||'',
+      ...QUESTIONS.map(q => (item[q.key]||'').replace(/,/g,'，').replace(/\n/g,' '))
+    ]);
+
+    const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `UFO탐구_답변_${new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // 자동 로드
+  loadData();
+</script>
+
+</body>
+</html>
