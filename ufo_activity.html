@@ -616,7 +616,12 @@ function submitToGoogleForm() {
     + '&entry.286745530='  + encodeURIComponent(get('act3_trend'))
     + '&entry.1981008201=' + encodeURIComponent(get('act3_trend'))
     + '&entry.226600605='  + encodeURIComponent(get('act3_year'))
-    + '&entry.778576819='  + encodeURIComponent(get('act3_reason'));
+    + '&entry.778576819='  + encodeURIComponent(get('act3_reason'))
+    + '&entry.388497267='  + encodeURIComponent(get('act1_1') + ', ' + get('act1_2') + ', ' + get('act1_3') + ' / ' + get('act1_reason'))
+    + '&entry.1612511958=' + encodeURIComponent(get('q5_state') + ' (' + get('q5_count') + '건) / ' + get('q5_reason'))
+    + '&entry.369424944='  + encodeURIComponent('가장 많은: ' + get('q6_max') + ', 가장 적은: ' + get('q6_min') + ' / ' + get('q6_reason'))
+    + '&entry.732010825='  + encodeURIComponent(get('q7_year') + ' / ' + get('q7_reason'))
+    + '&entry.1667011691=' + encodeURIComponent('가장 많은: ' + get('q8_max') + ', 가장 적은: ' + get('q8_min') + ' / ' + get('q8_reason'));
 
   // 새 창으로 설문지 열기 (미리 채워진 상태)
   window.open(url, '_blank');
