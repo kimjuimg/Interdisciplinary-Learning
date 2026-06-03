@@ -387,6 +387,14 @@
       </div>
       <textarea class="ans" id="q2" rows="3" placeholder="예) 날씨, 인구밀도, 항공기 항로, 미디어의 영향, 특정 지역의 군사시설..."></textarea>
     </div>
+
+    <div class="q-wrap">
+      <div class="q-head">
+        <div class="q-badge qb-purple">Q3</div>
+        <div class="q-text">데이터 표를 살펴보며 <strong>흥미롭거나 특이한 기록</strong>을 찾아 적어보세요.</div>
+      </div>
+      <textarea class="ans" id="q3" rows="3" placeholder="예) 새벽 3시에 목격된 삼각형 형태의 UFO가 텍사스에서 발견됐다..."></textarea>
+    </div>
   </div>
 
   <!-- 데이터 열기 -->
@@ -399,7 +407,7 @@
       <strong>1차시</strong>에는 기본 탐색을, <strong>2차시</strong>에는 탐구 질문을 정해 깊이 분석해요.
     </div>
 
-    <a class="data-link-wrap" href="https://codap.concord.org/app/static/dg/ko/cert/index.html" target="_blank" id="codap-link">
+    <a class="data-link-wrap" href="https://codap.concord.org/app/static/dg/ko/cert/index.html#shared=https%3A%2F%2Fcfm-shared.concord.org%2FGyrRerDpJdoHkiLJnF26%2Ffile.json" target="_blank" id="codap-link">
       <div class="dl-icon">🛸</div>
       <div class="dl-info">
         <span class="dl-num">DATA · UFO SIGHTINGS</span>
@@ -443,6 +451,128 @@
 
     <div class="step-row">
       <span class="step-badge">STEP 2</span>
+      <span class="step-label">데이터 분석 활동</span>
+    </div>
+
+    <div class="info-box">
+      아래 3가지 질문에 답하기 위해 CODAP에서 그래프를 직접 만들어보세요!<br>
+      <strong>형태</strong> 변수를 x축으로 끌어다 놓으면 막대 그래프가 만들어져요.
+    </div>
+
+    <!-- 활동 1 -->
+    <div style="background:#f0f2fa; border-radius:14px; padding:18px 20px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="background:var(--accent2); color:white; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0;">1</div>
+        <div style="font-size:15px; font-weight:700; color:var(--primary);">UFO는 어떤 모양을 하고 있을까? 🛸</div>
+      </div>
+      <div class="tip-box" style="margin-bottom:10px;">
+        💡 CODAP에서 <strong>형태</strong> 변수를 x축으로 끌어다 놓아 막대 그래프를 만들어보세요!
+      </div>
+      <div class="q-wrap" style="margin-bottom:10px;">
+        <div class="q-head">
+          <div class="q-badge qb-purple">①</div>
+          <div class="q-text">그래프를 만들어 <strong>가장 많이 목격된 UFO 모양 3가지</strong>를 적어보세요.</div>
+        </div>
+        <div class="inline-fields">
+          <div class="field-row">
+            <label>1위 모양</label>
+            <input type="text" id="act1_1" placeholder="">
+          </div>
+          <div class="field-row">
+            <label>2위 모양</label>
+            <input type="text" id="act1_2" placeholder="">
+          </div>
+          <div class="field-row">
+            <label>3위 모양</label>
+            <input type="text" id="act1_3" placeholder="">
+          </div>
+        </div>
+      </div>
+      <div class="q-wrap" style="margin-bottom:0;">
+        <div class="q-head">
+          <div class="q-badge qb-purple">②</div>
+          <div class="q-text">가장 많이 목격된 모양이 그것인 이유가 뭘까요? 내 생각을 적어보세요.</div>
+        </div>
+        <textarea class="ans" id="act1_reason" rows="2" placeholder="예) 빛 모양이 많은 이유는 밤에 목격하다 보니 형태를 구분하기 어려워서..."></textarea>
+      </div>
+    </div>
+
+    <!-- 활동 2 -->
+    <div style="background:#f0f2fa; border-radius:14px; padding:18px 20px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="background:var(--accent); color:white; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0;">2</div>
+        <div style="font-size:15px; font-weight:700; color:var(--primary);">UFO는 어느 나라에서 많이 발견될까? 🗺️</div>
+      </div>
+      <div class="tip-box" style="margin-bottom:10px;">
+        💡 CODAP에서 <strong>국가</strong> 변수를 x축으로 끌어다 놓아 막대 그래프를 만들어보세요!
+      </div>
+      <div class="q-wrap" style="margin-bottom:10px;">
+        <div class="q-head">
+          <div class="q-badge qb-blue">①</div>
+          <div class="q-text">그래프를 만들어 <strong>UFO 목격이 가장 많은 나라 3가지</strong>를 적어보세요.</div>
+        </div>
+        <div class="inline-fields">
+          <div class="field-row">
+            <label>1위 나라</label>
+            <input type="text" id="act2_1" placeholder="">
+          </div>
+          <div class="field-row">
+            <label>2위 나라</label>
+            <input type="text" id="act2_2" placeholder="">
+          </div>
+          <div class="field-row">
+            <label>3위 나라</label>
+            <input type="text" id="act2_3" placeholder="">
+          </div>
+        </div>
+      </div>
+      <div class="q-wrap" style="margin-bottom:0;">
+        <div class="q-head">
+          <div class="q-badge qb-blue">②</div>
+          <div class="q-text">특정 나라에서 UFO 목격이 많은 이유가 뭘까요? 내 생각을 적어보세요.</div>
+        </div>
+        <textarea class="ans" id="act2_reason" rows="2" placeholder="예) 미국에 많은 이유는 군사기지가 많거나 우주에 관심이 많아서..."></textarea>
+      </div>
+    </div>
+
+    <!-- 활동 3 -->
+    <div style="background:#f0f2fa; border-radius:14px; padding:18px 20px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="background:var(--accent3); color:white; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0;">3</div>
+        <div style="font-size:15px; font-weight:700; color:var(--primary);">UFO 사례는 점점 증가할까, 감소할까? 📈</div>
+      </div>
+      <div class="tip-box" style="margin-bottom:10px;">
+        💡 CODAP에서 <strong>연도</strong> 변수를 x축으로 끌어다 놓아 꺾은선 또는 막대 그래프를 만들어보세요!
+      </div>
+      <div class="q-wrap" style="margin-bottom:10px;">
+        <div class="q-head">
+          <div class="q-badge qb-green">①</div>
+          <div class="q-text">연도별 UFO 목격 건수 그래프에서 <strong>전체적인 경향</strong>은 어떤가요?</div>
+        </div>
+        <div class="inline-fields">
+          <div class="field-row">
+            <label>전체 경향</label>
+            <input type="text" id="act3_trend" placeholder="예) 증가 / 감소 / 증가 후 감소">
+          </div>
+          <div class="field-row">
+            <label>가장 많은 연도</label>
+            <input type="text" id="act3_year" placeholder="예) 2012년">
+          </div>
+        </div>
+      </div>
+      <div class="q-wrap" style="margin-bottom:0;">
+        <div class="q-head">
+          <div class="q-badge qb-green">②</div>
+          <div class="q-text">UFO 목격 사례가 이런 경향을 보이는 이유가 뭘까요? 내 생각을 적어보세요.</div>
+        </div>
+        <textarea class="ans" id="act3_reason" rows="2" placeholder="예) 인터넷과 스마트폰이 보급되면서 신고가 쉬워져서 증가했을 것 같다..."></textarea>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="step-row">
+      <span class="step-badge">STEP 3</span>
       <span class="step-label">형태(Shape) 데이터 탐구</span>
     </div>
 
@@ -552,76 +682,7 @@
       <textarea class="ans" id="q8_reason" rows="2" placeholder="계절별 차이가 나는 이유는 무엇일까요?" style="margin-top:10px"></textarea>
     </div>
 
-    <div class="divider"></div>
-
-    <div class="step-row">
-      <span class="step-badge">STEP 4</span>
-      <span class="step-label">내 탐구 질문 만들기</span>
-    </div>
-
-    <div class="topic-grid">
-      <div class="topic-card">
-        <span class="t-emoji">🌙</span>
-        <div class="t-title">시간과 형태의 관계</div>
-        <div class="t-desc">밤에는 어떤 형태가 더 많이 목격될까?</div>
-      </div>
-      <div class="topic-card">
-        <span class="t-emoji">📅</span>
-        <div class="t-title">연도와 형태의 변화</div>
-        <div class="t-desc">시대에 따라 UFO 형태 보고가 달라졌을까?</div>
-      </div>
-      <div class="topic-card">
-        <span class="t-emoji">🗺️</span>
-        <div class="t-title">지역별 특성</div>
-        <div class="t-desc">특정 주에서 유독 많이 보이는 형태가 있을까?</div>
-      </div>
-      <div class="topic-card">
-        <span class="t-emoji">🎨</span>
-        <div class="t-title">색상과 형태</div>
-        <div class="t-desc">특정 형태의 UFO는 특정 색으로 보고될까?</div>
-      </div>
-    </div>
-
-    <div class="q-wrap" style="margin-top:16px">
-      <div class="q-head">
-        <div class="q-badge qb-yellow">Q9</div>
-        <div class="q-text">위 예시나 데이터를 참고해 <strong>내 탐구 질문</strong>을 만들어보세요. 최소 두 변수의 관계여야 해요!</div>
-      </div>
-      <textarea class="ans" id="q9" rows="2" placeholder="나의 탐구 질문: "></textarea>
-    </div>
-
-    <div class="q-wrap">
-      <div class="q-head">
-        <div class="q-badge qb-yellow">Q10</div>
-        <div class="q-text">탐구 질문에 답하기 위해 그래프를 만들고 <strong>발견한 패턴</strong>을 구체적으로 서술하세요.</div>
-      </div>
-      <div class="tip-box">
-        💡 그래프 중앙에 변수를 끌어다 놓으면 색상으로 구분할 수 있어요! 여러 그래프를 만들어보세요.
-      </div>
-      <textarea class="ans" id="q10" rows="5" placeholder="탐구 과정과 발견한 내용을 구체적으로 적어보세요...&#10;예) Shape(형태)를 x축, Hour(시간)를 y축으로 놓았더니..."></textarea>
-    </div>
-  </div>
-
-  <!-- 마무리 -->
-  <div class="card">
-    <div class="card-tag tag-green">마무리</div>
-    <div class="card-title"><span class="ico">💬</span>성찰 & 비판적 사고</div>
-
-    <div class="q-wrap">
-      <div class="q-head">
-        <div class="q-badge qb-green">Q11</div>
-        <div class="q-text">UFO 목격 데이터에서 발견한 패턴이 <strong>실제로 UFO가 존재한다는 증거</strong>가 될 수 있을까요? 데이터의 한계를 생각해보세요.</div>
-      </div>
-      <textarea class="ans" id="q11" rows="4" placeholder="데이터로 알 수 있는 것과 알 수 없는 것은 무엇인지 생각해보세요...&#10;예) 이 데이터는 '목격 신고' 기록이지, 실제 존재 여부가 아니다..."></textarea>
-    </div>
-
-    <div class="q-wrap">
-      <div class="q-head">
-        <div class="q-badge qb-green">Q12</div>
-        <div class="q-text">이번 탐구에서 <strong>가장 흥미로웠던 발견</strong>은 무엇인가요?</div>
-      </div>
-      <textarea class="ans" id="q12" rows="3" placeholder="가장 놀랍거나 흥미로웠던 점..."></textarea>
-    </div>
+    
 
     <div class="divider"></div>
 
@@ -636,113 +697,80 @@
     </ul>
   </div>
 
-  <!-- 변수 정의표 -->
-  <div class="card">
-    <div class="card-tag tag-dark">참고자료</div>
-    <div class="card-title"><span class="ico">📋</span>변수 정의표 (Variables & Definitions)</div>
-    <table class="var-table">
-      <thead>
-        <tr>
-          <th style="width:5%">#</th>
-          <th style="width:20%">변수명</th>
-          <th>설명</th>
-          <th style="width:15%">값 예시</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="vnum">1</td>
-          <td class="vname">City</td>
-          <td>목격된 도시 이름</td>
-          <td>Seattle, Denver</td>
-        </tr>
-        <tr>
-          <td class="vnum">2</td>
-          <td class="vname">State</td>
-          <td>목격된 미국 주(州) 약자</td>
-          <td>CA, TX, NY</td>
-        </tr>
-        <tr>
-          <td class="vnum">3</td>
-          <td class="vname">Shape</td>
-          <td>목격된 UFO 형태</td>
-          <td>LIGHT, TRIANGLE, DISK, CIRCLE, FIREBALL 등</td>
-        </tr>
-        <tr>
-          <td class="vnum">4</td>
-          <td class="vname">Color</td>
-          <td>목격된 UFO 색상 (미보고 시 UNKNOWN)</td>
-          <td>RED, ORANGE, GREEN, BLUE 등</td>
-        </tr>
-        <tr>
-          <td class="vnum">5</td>
-          <td class="vname">Year</td>
-          <td>목격 연도</td>
-          <td>1990 ~ 2005</td>
-        </tr>
-        <tr>
-          <td class="vnum">6</td>
-          <td class="vname">Month</td>
-          <td>목격 월 (1=1월, 12=12월)</td>
-          <td>1 ~ 12</td>
-        </tr>
-        <tr>
-          <td class="vnum">7</td>
-          <td class="vname">Hour</td>
-          <td>목격 시간 (24시간 기준, 0=자정)</td>
-          <td>0 ~ 23</td>
-        </tr>
-      </tbody>
-    </table>
 
-    <div style="margin-top:18px">
-      <p style="font-size:13px; font-weight:700; color:var(--primary); margin-bottom:10px;">🛸 UFO 형태 종류 설명</p>
-      <table class="var-table">
-        <thead>
-          <tr><th>형태명</th><th>설명</th><th>형태명</th><th>설명</th></tr>
-        </thead>
-        <tbody>
-          <tr><td class="vname">LIGHT</td><td>빛/발광체</td><td class="vname">TRIANGLE</td><td>삼각형</td></tr>
-          <tr><td class="vname">DISK</td><td>원반형</td><td class="vname">CIRCLE</td><td>원형</td></tr>
-          <tr><td class="vname">FIREBALL</td><td>불덩어리</td><td class="vname">SPHERE</td><td>구형</td></tr>
-          <tr><td class="vname">CIGAR</td><td>시가(담배)형</td><td class="vname">OVAL</td><td>타원형</td></tr>
-          <tr><td class="vname">FORMATION</td><td>편대(여러 개)</td><td class="vname">CYLINDER</td><td>원통형</td></tr>
-          <tr><td class="vname">DIAMOND</td><td>다이아몬드형</td><td class="vname">CHEVRON</td><td>V자형</td></tr>
-          <tr><td class="vname">FLASH</td><td>섬광</td><td class="vname">EGG</td><td>달걀형</td></tr>
-          <tr><td class="vname">TEARDROP</td><td>물방울형</td><td class="vname">OTHER</td><td>기타</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">📌 데이터 출처: National UFO Reporting Center (NUFORC) via Kaggle</p>
-  </div>
-
-
-  <!-- Firebase 제출 -->
-  <div class="card" style="border: 2px solid var(--accent2); background: #0d0a1e;">
+  <!-- 구글 설문지 제출 -->
+  <div class="card" style="border:2px solid var(--accent2); background:#fefbf0;">
     <div class="card-tag tag-purple">제출</div>
-    <div class="card-title" style="margin-top:8px; color:white;"><span class="ico">🛸</span><span style="color:white">Firebase로 제출하기</span></div>
-    <p style="font-size:13.5px; color:rgba(255,255,255,0.65); margin-bottom:18px;">위에 작성한 내용을 선생님 데이터베이스로 전송합니다. 모든 문항을 작성한 후 제출하세요.</p>
-
-    <div id="submit-notice" style="display:none; background:rgba(62,201,167,0.15); border:1.5px solid var(--accent3); border-radius:10px; padding:14px 18px; font-size:13.5px; color:var(--accent3); margin-bottom:16px;">
-      ✅ 제출 완료! 선생님 데이터베이스에 저장되었습니다.
+    <div class="card-title" style="margin-top:8px;"><span class="ico">📤</span>구글 설문지로 제출하기</div>
+    <p style="font-size:13.5px; color:var(--muted); margin-bottom:18px;">위에 작성한 내용을 구글 설문지로 전송합니다. 모든 문항을 작성한 후 제출하세요.</p>
+    <div id="submit-notice" style="display:none; background:#e8f5e9; border:1.5px solid #4caf50; border-radius:10px; padding:14px 18px; font-size:13.5px; color:#2e7d32; margin-bottom:16px;">
+      ✅ 제출 완료! 구글 설문지 응답이 전송되었습니다.
     </div>
-    <div id="submit-error" style="display:none; background:rgba(247,80,80,0.15); border:1.5px solid #f75050; border-radius:10px; padding:14px 18px; font-size:13.5px; color:#f75050; margin-bottom:16px;">
-      ❌ 제출 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도하세요.
-    </div>
-
-    <button onclick="submitToFirebase()" id="submit-btn" style="
-      display:flex; align-items:center; gap:10px;
-      background: linear-gradient(135deg, #4f6ef7, #a259f7);
-      color:white; border:none; border-radius:12px; padding:14px 32px;
-      font-family:'Noto Sans KR',sans-serif; font-size:15px; font-weight:700;
-      cursor:pointer; margin:0 auto; width:100%; justify-content:center;
-      transition: opacity 0.2s;
-    " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-      🛸 제출하기
+    <button onclick="submitToGoogleForm()" style="display:flex; align-items:center; gap:10px; background:var(--accent2); color:white; border:none; border-radius:12px; padding:14px 32px; font-family:'Noto Sans KR',sans-serif; font-size:15px; font-weight:700; cursor:pointer; margin:0 auto; width:100%; justify-content:center; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+      📤 구글 설문지로 제출하기
     </button>
   </div>
 
 </div><!-- /container -->
+
+<script>
+function submitToGoogleForm() {
+  var FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScHTHfFayXgFgFNcomnD7pin9Ay12uBCqfxTpp9rXwP_imcgg/formResponse';
+  function get(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+
+  var data = {
+    'entry.1882783700': get('s-class'),
+    'entry.1713135630': get('s-name'),
+    'entry.770899675':  get('q1'),
+    'entry.540732477':  get('q2'),
+    'entry.1863125767': get('q3'),
+    'entry.674236736':  get('act1_1') + ' / ' + get('act1_2') + ' / ' + get('act1_3'),
+    'entry.1360534949': get('act1_1') + ', ' + get('act1_2') + ', ' + get('act1_3'),
+    'entry.1830132585': get('act1_reason'),
+    'entry.1075096619': get('act1_reason'),
+    'entry.1269093974': get('act2_1') + ' / ' + get('act2_2') + ' / ' + get('act2_3'),
+    'entry.913263172':  get('act2_1') + ', ' + get('act2_2') + ', ' + get('act2_3'),
+    'entry.445185500':  get('act2_reason'),
+    'entry.286745530':  get('act3_trend'),
+    'entry.1981008201': get('act3_trend'),
+    'entry.226600605':  get('act3_year'),
+    'entry.778576819':  get('act3_reason'),
+  };
+
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = FORM_URL;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
+
+  for (var name in data) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = data[name];
+    form.appendChild(input);
+  }
+
+  var iframe = document.getElementById('hidden_iframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.id = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  setTimeout(function() {
+    document.getElementById('submit-notice').style.display = 'block';
+    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+  }, 1500);
+}
+</script>
+
 
 <!-- Firebase SDK -->
 <script type="module">
