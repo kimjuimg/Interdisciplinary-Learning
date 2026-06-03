@@ -645,9 +645,26 @@ function submitToGoogleForm() {
   form.submit();
   document.body.removeChild(form);
 
+  // 설문지 미리 채워진 URL 생성
+  var prefillUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScHTHfFayXgFgFNcomnD7pin9Ay12uBCqfxTpp9rXwP_imcgg/viewform'
+    + '?entry.1882783700=' + encodeURIComponent(get('s-class'))
+    + '&entry.1713135630=' + encodeURIComponent(get('s-name'))
+    + '&entry.770899675='  + encodeURIComponent(get('q1'))
+    + '&entry.540732477='  + encodeURIComponent(get('q2'))
+    + '&entry.1863125767=' + encodeURIComponent(get('q3'))
+    + '&entry.1269093974=' + encodeURIComponent(get('act2_1') + ' / ' + get('act2_2') + ' / ' + get('act2_3'))
+    + '&entry.913263172='  + encodeURIComponent(get('act2_1') + ', ' + get('act2_2') + ', ' + get('act2_3'))
+    + '&entry.445185500='  + encodeURIComponent(get('act2_reason'))
+    + '&entry.286745530='  + encodeURIComponent(get('act3_trend'))
+    + '&entry.1981008201=' + encodeURIComponent(get('act3_trend'))
+    + '&entry.226600605='  + encodeURIComponent(get('act3_year'))
+    + '&entry.778576819='  + encodeURIComponent(get('act3_reason'));
+
   setTimeout(function() {
     document.getElementById('submit-notice').style.display = 'block';
     window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+    // 새 창으로 설문지 열기
+    window.open(prefillUrl, '_blank');
   }, 1500);
 }
 </script>
