@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎢 롤러코스터 데이터 탐구 활동지</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Bebas+Neue&display=swap');
+
+  :root {
+    --bg: #0f0c29;
+    --card: #1a1740;
+    --primary: #ff6b35;
+    --primary-light: rgba(255,107,53,0.15);
+    --accent: #ffd700;
+    --accent2: #00d4ff;
+    --text: #f0eeff;
+    --text-muted: #9990cc;
+    --border: rgba(255,255,255,0.1);
+    --step1: rgba(0,212,255,0.12); --step1b: #00d4ff;
+    --step2: rgba(255,107,53,0.12); --step2b: #ff6b35;
+    --step3: rgba(168,85,247,0.12); --step3b: #a855f7;
+    --step4: rgba(255,215,0,0.12);  --step4b: #ffd700;
+    --radius: 16px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(168,85,247,0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(255,107,53,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(0,212,255,0.08) 0%, transparent 60%);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a0533 0%, #0f0c29 40%, #0d1f3c 100%);
+    border-bottom: 2px solid var(--primary);
+    padding: 36px 24px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before { content:'🎢'; position:absolute; font-size:120px; opacity:.05; top:-20px; left:-20px; transform:rotate(-15deg); }
+  .header::after  { content:'📊'; position:absolute; font-size:100px; opacity:.05; bottom:-20px; right:-10px; transform:rotate(10deg); }
+  .header-tag {
+    display:inline-block; background:var(--primary-light); border:1px solid var(--primary);
+    color:var(--primary); border-radius:20px; padding:4px 16px;
+    font-size:12px; font-weight:700; letter-spacing:1px; margin-bottom:12px;
+  }
+  .header h1 { font-family:'Bebas Neue',cursive; font-size:clamp(32px,6vw,52px); letter-spacing:3px; color:white; line-height:1.1; }
+  .header h1 span { color:var(--primary); }
+  .header-sub { margin-top:10px; color:var(--text-muted); font-size:14px; }
+  .header-sub strong { color:var(--accent2); }
+
+  /* STUDENT INFO */
+  .student-bar { max-width:800px; margin:24px auto; padding:0 16px; }
+  .student-card {
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px 24px; display:flex; gap:16px; flex-wrap:wrap; align-items:center;
+  }
+  .student-card .field-group { display:flex; align-items:center; gap:8px; flex:1; min-width:140px; }
+  .student-card label { font-size:12px; font-weight:700; color:var(--accent); white-space:nowrap; letter-spacing:.5px; }
+  .student-card input {
+    flex:1; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15);
+    border-radius:8px; padding:8px 12px; color:var(--text);
+    font-family:'Noto Sans KR',sans-serif; font-size:14px; outline:none; transition:border-color .2s;
+  }
+  .student-card input:focus { border-color:var(--accent); background:rgba(255,215,0,0.07); }
+
+  /* MAIN CONTENT */
+  .content { max-width:800px; margin:0 auto; padding:0 16px; display:flex; flex-direction:column; gap:20px; }
+
+  /* SESSION DIVIDER */
+  .session-header { display:flex; align-items:center; gap:14px; margin-top:8px; margin-bottom:-4px; }
+  .session-badge {
+    background:linear-gradient(135deg,var(--primary),#ff8c42); color:white;
+    border-radius:10px; padding:6px 16px; font-size:13px; font-weight:700;
+    white-space:nowrap; box-shadow:0 4px 16px rgba(255,107,53,0.35);
+  }
+  .session-badge.blue   { background:linear-gradient(135deg,#0099cc,#00d4ff); box-shadow:0 4px 16px rgba(0,212,255,0.3); }
+  .session-badge.purple { background:linear-gradient(135deg,#7c3aed,#a855f7); box-shadow:0 4px 16px rgba(168,85,247,0.3); }
+  .session-badge.gold   { background:linear-gradient(135deg,#b8860b,#ffd700); color:#1a1a1a; box-shadow:0 4px 16px rgba(255,215,0,0.3); }
+  .session-line { flex:1; height:1px; background:linear-gradient(to right,rgba(255,255,255,0.15),transparent); }
+  .session-title { font-size:15px; font-weight:700; color:var(--text-muted); }
+
+  /* STEP CARD */
+  .step-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
+  .step-head { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); }
+  .step-head.s1 { background:var(--step1); border-bottom-color:rgba(0,212,255,0.2); }
+  .step-head.s2 { background:var(--step2); border-bottom-color:rgba(255,107,53,0.2); }
+  .step-head.s3 { background:var(--step3); border-bottom-color:rgba(168,85,247,0.2); }
+  .step-head.s4 { background:var(--step4); border-bottom-color:rgba(255,215,0,0.2); }
+  .step-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .s1 .step-icon { background:rgba(0,212,255,0.2); } .s2 .step-icon { background:rgba(255,107,53,0.2); }
+  .s3 .step-icon { background:rgba(168,85,247,0.2); } .s4 .step-icon { background:rgba(255,215,0,0.2); }
+  .step-label { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+  .s1 .step-label { color:var(--step1b); } .s2 .step-label { color:var(--step2b); }
+  .s3 .step-label { color:var(--step3b); } .s4 .step-label { color:var(--step4b); }
+  .step-title-text { font-size:15px; font-weight:700; color:var(--text); }
+
+  /* QUESTION BLOCK */
+  .q-block { padding:18px 20px; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .q-block:last-child { border-bottom:none; }
+  .q-row { display:flex; gap:10px; margin-bottom:10px; align-items:flex-start; }
+  .q-num {
+    width:26px; height:26px; border-radius:50%; font-size:12px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+  }
+  .s1 .q-num { background:rgba(0,212,255,0.2); color:var(--step1b); }
+  .s2 .q-num { background:rgba(255,107,53,0.2); color:var(--step2b); }
+  .s3 .q-num { background:rgba(168,85,247,0.2); color:var(--step3b); }
+  .s4 .q-num { background:rgba(255,215,0,0.2); color:var(--step4b); }
+  .q-text { font-size:14px; font-weight:600; color:var(--text); flex:1; line-height:1.5; }
+  .q-hint { font-size:12px; color:var(--text-muted); margin-bottom:10px; padding-left:36px; line-height:1.6; }
+
+  /* INPUTS */
+  input.ans, textarea.ans {
+    width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12);
+    border-radius:10px; padding:10px 14px; color:var(--text);
+    font-family:'Noto Sans KR',sans-serif; font-size:14px; outline:none;
+    transition:border-color .2s,background .2s; resize:vertical;
+  }
+  input.ans:focus, textarea.ans:focus { border-color:rgba(255,255,255,0.3); background:rgba(255,255,255,0.08); }
+  input.ans { height:40px; resize:none; }
+  textarea.ans { min-height:90px; }
+
+  /* TWO-COL GRID */
+  .mini-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:4px; }
+  .mini-table th {
+    background:rgba(255,255,255,0.08); padding:8px 12px; text-align:left;
+    font-size:11px; font-weight:700; color:var(--text-muted); letter-spacing:.5px; border-bottom:1px solid var(--border);
+  }
+  .mini-table td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .mini-table td input {
+    width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    border-radius:6px; padding:6px 10px; color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:13px; outline:none;
+  }
+  .mini-table td input:focus { border-color:rgba(255,255,255,0.3); background:rgba(255,255,255,0.08); }
+  .mini-table .row-label { color:var(--text-muted); font-size:12px; font-weight:600; white-space:nowrap; }
+  .mini-table tr:last-child td { border-bottom:none; }
+
+  /* SAVE BAR */
+  .save-bar {
+    position:sticky; bottom:0; left:0; right:0;
+    background:rgba(15,12,41,0.96); backdrop-filter:blur(12px);
+    border-top:1px solid var(--border);
+    padding:12px 24px; display:flex; gap:10px; justify-content:center; align-items:center; z-index:100;
+  }
+  .save-bar .save-msg { font-size:12px; color:var(--text-muted); }
+  .btn {
+    padding:10px 20px; border-radius:10px; border:none;
+    font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:700;
+    cursor:pointer; transition:all .2s;
+  }
+  .btn-save { background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); }
+  .btn-save:hover { background:rgba(255,255,255,0.18); }
+  .btn-export { background:linear-gradient(135deg,var(--primary),#ff8c42); color:white; box-shadow:0 4px 16px rgba(255,107,53,0.35); }
+  .btn-export:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(255,107,53,0.5); }
+  .btn-submit { background:linear-gradient(135deg,#16a34a,#22c55e); color:white; box-shadow:0 4px 16px rgba(34,197,94,0.35); }
+  .btn-submit:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(34,197,94,0.5); }
+
+  /* MODAL */
+  .modal-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.78); backdrop-filter:blur(6px);
+    z-index:1000; align-items:center; justify-content:center;
+  }
+  .modal-overlay.active { display:flex; }
+  .modal-box {
+    background:#1a1740; border:1px solid rgba(255,255,255,0.15); border-radius:20px;
+    width:min(700px,96vw); height:min(840px,93vh);
+    display:flex; flex-direction:column;
+    box-shadow:0 24px 80px rgba(0,0,0,0.6); overflow:hidden;
+  }
+  .modal-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.1);
+    background:rgba(34,197,94,0.1); flex-shrink:0;
+  }
+  .modal-title { font-size:15px; font-weight:700; color:#22c55e; display:flex; align-items:center; gap:8px; }
+  .modal-hint { font-size:11px; color:var(--text-muted); margin-top:3px; }
+  .modal-close {
+    width:32px; height:32px; border-radius:50%; border:1px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.08); color:var(--text); font-size:16px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:background .2s; flex-shrink:0;
+  }
+  .modal-close:hover { background:rgba(255,255,255,0.2); }
+  .modal-iframe { flex:1; border:none; width:100%; background:white; }
+
+  @media(max-width:600px){
+    .student-card{ flex-direction:column; }
+    .student-card .field-group{ width:100%; }
+    .save-bar{ flex-wrap:wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">📊 CODAP 데이터 탐구 활동지</div>
+  <h1>🎢 <span>ROLLER</span>COASTER<br>DATA QUEST</h1>
+  <p class="header-sub">롤러코스터 데이터로 배우는 <strong>통계 분석</strong> · <strong>데이터 리터러시</strong></p>
+</div>
+
+<!-- STUDENT INFO -->
+<div class="student-bar">
+  <div class="student-card">
+    <div class="field-group">
+      <label>🏫 학년·반</label>
+      <input type="text" id="grade" placeholder="예) 1학년 3반" class="ans">
+    </div>
+    <div class="field-group">
+      <label>✏️ 번호·이름</label>
+      <input type="text" id="name" placeholder="예) 15번 홍길동" class="ans">
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- 1차시 -->
+  <div class="session-header">
+    <div class="session-badge blue">1차시</div>
+    <span class="session-title">롤러코스터와 만나기 · 데이터 첫 탐색</span>
+    <div class="session-line"></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card">
+    <div class="step-head s1">
+      <div class="step-icon">🎡</div>
+      <div><div class="step-label">STEP 1</div><div class="step-title-text">롤러코스터와 친해지기</div></div>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s1">1</div><div class="q-text">나의 롤러코스터 경험을 써보세요.</div></div>
+      <p class="q-hint">타본 적이 있다면 기억나는 느낌, 없다면 영상이나 TV에서 본 느낌을 솔직하게 써보세요.</p>
+      <textarea class="ans" id="q1" placeholder="예) 에버랜드 티익스프레스를 탄 적이 있는데 첫 낙하 때 정말 심장이 멈추는 줄 알았어요..."></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s1">2</div><div class="q-text">롤러코스터를 짜릿하거나 무섭게 만드는 물리적 요소는 무엇일까요?</div></div>
+      <p class="q-hint">높이, 속도, 회전, 낙하 등 생각나는 요소를 모두 적어보세요.</p>
+      <textarea class="ans" id="q2" placeholder="예) 높이가 높을수록, 낙하 각도가 클수록, 속도가 빠를수록..."></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s1">3</div><div class="q-text">롤러코스터를 설계하는 엔지니어가 반드시 고려해야 할 물리적 요소에는 어떤 것들이 있을까요?</div></div>
+      <p class="q-hint">안전성, 재미, 비용, 탑승자 특성 등 다양한 관점에서 생각해보세요.</p>
+      <textarea class="ans" id="q3" placeholder="예) 탑승자 안전(최대 G-force), 연령 제한, 키 제한, 유지보수 비용..."></textarea>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card">
+    <div class="step-head s2">
+      <div class="step-icon">📏</div>
+      <div><div class="step-label">STEP 2</div><div class="step-title-text">데이터 첫 탐색 — 최솟값 · 최댓값 찾기</div></div>
+    </div>
+    <div class="q-block">
+      <p class="q-hint" style="padding-left:0;margin-bottom:14px;">CODAP에서 <strong style="color:var(--step2b)">Height(높이)</strong> 변수를 기준으로 가장 낮은 코스터와 가장 높은 코스터를 찾아보세요.</p>
+      <table class="mini-table">
+        <tr>
+          <th style="width:36px;">#</th><th>구분</th><th>코스터 이름</th><th>높이 (ft)</th><th>다른 특징</th>
+        </tr>
+        <tr>
+          <td><div class="q-num s2" style="width:22px;height:22px;font-size:11px;">4</div></td>
+          <td class="row-label">📉 가장 낮은</td>
+          <td><input type="text" id="q4a" placeholder="이름"></td>
+          <td><input type="text" id="q4b" placeholder="ft"></td>
+          <td><input type="text" id="q4c" placeholder="특징"></td>
+        </tr>
+        <tr>
+          <td><div class="q-num s2" style="width:22px;height:22px;font-size:11px;">5</div></td>
+          <td class="row-label">📈 가장 높은</td>
+          <td><input type="text" id="q5a" placeholder="이름"></td>
+          <td><input type="text" id="q5b" placeholder="ft"></td>
+          <td><input type="text" id="q5c" placeholder="특징"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 2차시 -->
+  <div class="session-header">
+    <div class="session-badge purple">2차시</div>
+    <span class="session-title">자유 탐구 · 탐구 질문 설계</span>
+    <div class="session-line"></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card">
+    <div class="step-head s3">
+      <div class="step-icon">🔍</div>
+      <div><div class="step-label">STEP 3</div><div class="step-title-text">자유 탐색 — 패턴 찾기</div></div>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s3">6</div><div class="q-text">CODAP 그래프를 자유롭게 탐색하면서 발견한 패턴이나 흥미로운 점을 써보세요.</div></div>
+      <p class="q-hint">변수를 바꿔보고, 그래프 형태를 바꿔가며 눈에 띄는 것을 기록하세요.</p>
+      <textarea class="ans" id="q6" placeholder="예) 높이가 높을수록 속도도 대체로 빠른 것 같다 / 목재 코스터는 높이가 낮은 편이다..."></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s3">7</div><div class="q-text">데이터에 있는 변수들을 활용해 내 탐구 질문을 만들어보세요. (최소 두 변수의 관계에 대한 질문)</div></div>
+      <p class="q-hint">"~와 ~는 관계가 있을까?", "~가 높은 코스터의 특징은?" 형태로 써도 좋아요.</p>
+      <textarea class="ans" id="q7" placeholder="예) 재질(목재/철재)에 따라 최대 속도에 차이가 있을까?"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s3">8</div><div class="q-text">탐구 과정과 발견한 내용을 구체적으로 기록해보세요.</div></div>
+      <p class="q-hint">어떤 변수를 선택했는지, 어떤 그래프를 만들었는지, 무엇을 발견했는지 순서대로 써보세요.</p>
+      <textarea class="ans" id="q8" placeholder="예) X축에 Speed, Y축에 Height를 놓고 산점도를 그려봤더니 대체로 오른쪽 위로 올라가는 경향이 있었다..."></textarea>
+    </div>
+  </div>
+
+  <!-- 심화 + 마무리 -->
+  <div class="session-header">
+    <div class="session-badge gold">심화 + 마무리</div>
+    <span class="session-title">비교 분석 · 배움 정리</span>
+    <div class="session-line"></div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card">
+    <div class="step-head s4">
+      <div class="step-icon">🏆</div>
+      <div><div class="step-label">STEP 4</div><div class="step-title-text">비교 분석 · 배움 돌아보기</div></div>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s4">9</div><div class="q-text">목재(Wooden) 코스터와 철제(Steel) 코스터 사이에 차이가 있나요? 데이터가 무엇을 말해주는지 적어보세요.</div></div>
+      <p class="q-hint">높이, 속도, 길이 등 여러 변수를 비교하고, CODAP 그래프를 활용해보세요.</p>
+      <textarea class="ans" id="q9" placeholder="예) 철제 코스터가 평균 높이와 속도 모두 높았다. 반면 목재 코스터는 수가 적고 대부분 낮은 편이었다..."></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s4">10</div><div class="q-text">데이터와 그래프로 질문에 답하는 과정에서 무엇을 배웠나요?</div></div>
+      <p class="q-hint">통계, 데이터 분석, CODAP 사용법 중 인상 깊었던 것 무엇이든 좋아요.</p>
+      <textarea class="ans" id="q10" placeholder="예) 데이터를 직접 눈으로 보니 훨씬 이해가 잘 됐다. 산점도로 두 변수의 관계를 한눈에 볼 수 있다는 걸 알았다..."></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-row"><div class="q-num s4">11</div><div class="q-text">롤러코스터에 대해 데이터 탐구를 통해 새롭게 알게 된 사실은 무엇인가요?</div></div>
+      <p class="q-hint">롤러코스터에 대해서든, 데이터 분석에 대해서든 새로 알게 된 것을 자유롭게 적어보세요.</p>
+      <textarea class="ans" id="q11" placeholder="예) 세계에서 가장 높은 롤러코스터는 무려 456ft나 된다는 사실을 처음 알았다..."></textarea>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- SAVE BAR -->
+<div class="save-bar">
+  <span class="save-msg" id="save-msg">자동 저장: 30초마다</span>
+  <button class="btn btn-save" onclick="saveData()">💾 임시 저장</button>
+  <button class="btn btn-export" onclick="exportHTML()">📥 파일로 저장</button>
+  <button class="btn btn-submit" onclick="openFormModal()">📋 구글 설문지 제출하기</button>
+</div>
+
+<!-- 구글 설문지 모달 -->
+<div class="modal-overlay" id="formModal" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">📋 롤러 코스터 데이터 베이스 저장</div>
+        <div class="modal-hint">활동지에 작성한 내용을 보며 설문지를 채워 제출하세요! &nbsp;|&nbsp; ESC 또는 ✕ 로 닫기</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <iframe
+      class="modal-iframe"
+      id="formIframe"
+      src=""
+      frameborder="0"
+      marginheight="0"
+      marginwidth="0">로드 중…</iframe>
+  </div>
+</div>
+
+<script>
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd9EyjGHbWwV3JffO3rFkhK0hRmNKNDaMQbT1tiEMIHleTvCQ/viewform?embedded=true';
+
+const FIELD_IDS = [
+  'grade','name',
+  'q1','q2','q3',
+  'q4a','q4b','q4c',
+  'q5a','q5b','q5c',
+  'q6','q7','q8',
+  'q9','q10','q11'
+];
+
+function gatherData() {
+  const d = {};
+  FIELD_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) d[id] = el.value;
+  });
+  return d;
+}
+
+function restoreData(d) {
+  FIELD_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && d[id] !== undefined) el.value = d[id];
+  });
+}
+
+function saveData() {
+  try {
+    localStorage.setItem('rollercoaster-activity', JSON.stringify(gatherData()));
+    const msg = document.getElementById('save-msg');
+    msg.textContent = '✅ 저장됨 ' + new Date().toLocaleTimeString();
+    setTimeout(() => { msg.textContent = '자동 저장: 30초마다'; }, 2500);
+  } catch(e) {
+    alert('저장에 실패했습니다. 파일로 저장 버튼을 이용해주세요.');
+  }
+}
+
+function exportHTML() {
+  const data = gatherData();
+  const name = data['name'] || '이름';
+  const grade = data['grade'] || '학년반';
+
+  const clone = document.documentElement.cloneNode(true);
+  // 모달 초기화
+  const modal = clone.querySelector('#formModal');
+  if (modal) modal.classList.remove('active');
+  const iframe = clone.querySelector('#formIframe');
+  if (iframe) iframe.src = '';
+  // save-bar 제거
+  const bar = clone.querySelector('.save-bar');
+  if (bar) bar.remove();
+
+  const script = clone.ownerDocument.createElement('script');
+  const dataStr = JSON.stringify(data).replace(/<\/script>/gi, '<\\/script>');
+  script.textContent = [
+    'window.addEventListener("DOMContentLoaded", function() {',
+    '  var d = ' + dataStr + ';',
+    '  Object.keys(d).forEach(function(k){',
+    '    var el = document.getElementById(k);',
+    '    if(el) el.value = d[k];',
+    '  });',
+    '});'
+  ].join('\n');
+  clone.querySelector('head').appendChild(script);
+
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = grade + '_' + name + '_롤러코스터활동지.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// 모달 열기/닫기
+function openFormModal() {
+  const iframe = document.getElementById('formIframe');
+  if (!iframe.src || iframe.src === window.location.href || iframe.src === 'about:blank' || iframe.src === '') {
+    iframe.src = FORM_URL;
+  }
+  document.getElementById('formModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('formModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('formModal')) closeModal();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+window.addEventListener('DOMContentLoaded', function() {
+  try {
+    const saved = localStorage.getItem('rollercoaster-activity');
+    if (saved) restoreData(JSON.parse(saved));
+  } catch(e) {}
+  setInterval(saveData, 30000);
+});
+</script>
+</body>
+</html>
